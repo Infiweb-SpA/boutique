@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin - ATELIER Inventory</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "error-dim": "#5c1202",
+                    "background": "#faf9f6",
+                    "surface": "#faf9f6",
+                    "primary": "#5f5e5e",
+                    "secondary": "#745b3b",
+                    "on-surface": "#2f3430",
+                    "on-primary": "#faf7f6"
+                },
+                "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Manrope', sans-serif; }
+    h1, h2, h3 { font-family: 'Noto Serif', serif; }
+</style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 bg-[#f4f4f0] flex flex-col py-8 z-50">
+    <div class="px-8 mb-12">
+        <h1 class="font-noto-serif font-bold text-[#5f5e5e] text-lg tracking-widest">MANAGEMENT</h1>
+        <p class="font-manrope text-[10px] tracking-[0.2em] uppercase opacity-60">High-End Atelier</p>
+    </div>
+    <nav class="flex-1 px-4 space-y-2">
+        <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
+            <span class="material-symbols-outlined">dashboard</span>Dashboard
+        </a>
+        <a href="{{ url_for('main.admin') }}" class="flex items-center gap-4 px-4 py-3 bg-[#faf9f6] text-[#745b3b] font-bold text-xs tracking-wider uppercase">
+            <span class="material-symbols-outlined">inventory_2</span>Inventory
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
+            <span class="material-symbols-outlined">group</span>Customers
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
+            <span class="material-symbols-outlined">settings</span>Settings
+        </a>
+    </nav>
+    <div class="px-6 mt-auto">
+        <a href="{{ url_for('main.index') }}" class="block w-full bg-primary text-on-primary py-4 text-center text-[10px] tracking-[0.2em] uppercase hover:bg-primary-dim transition-all">
+            ← Volver a Tienda
+        </a>
+    </div>
+</aside>
+
+<!-- Header -->
+<header class="fixed top-0 right-0 left-64 z-40 bg-[#faf9f6]/90 backdrop-blur-xl flex justify-between items-center px-12 py-6">
+    <h2 class="text-xl font-bold tracking-[0.2em] text-[#5f5e5e] font-headline uppercase">INVENTARIO</h2>
+    <div class="flex items-center gap-6">
+        <span class="text-sm text-on-surface-variant">{{ productos|length }} productos</span>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="ml-64 pt-28 px-12 pb-12 min-h-screen">
+    <!-- Tabla de productos -->
+    <div class="grid grid-cols-1 gap-px bg-surface-container-low">
+        <div class="bg-surface grid grid-cols-12 px-6 py-4 text-[10px] tracking-[0.2em] uppercase text-outline-variant">
+            <div class="col-span-5">Producto</div>
+            <div class="col-span-2 text-center">Categoría</div>
+            <div class="col-span-1 text-center">Stock</div>
+            <div class="col-span-1 text-right">Precio</div>
+            <div class="col-span-3 text-right">Acciones</div>
+        </div>
+        
+        {% for p in productos %}
+        <div class="group bg-surface hover:bg-surface-container-lowest transition-all duration-300 grid grid-cols-12 px-6 py-6 items-center">
+            <div class="col-span-5 flex items-center gap-6">
+                <div class="w-16 h-20 bg-surface-container-high overflow-hidden">
+                    <img src="{{ p.imagen_url }}" class="w-full h-full object-cover" onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                </div>
+                <div>
+                    <h4 class="font-headline text-base tracking-wide text-on-surface">{{ p.nombre }}</h4>
+                    <p class="text-[10px] uppercase tracking-widest text-outline-variant">SKU: {{ p.sku or 'N/A' }}</p>
+                </div>
+            </div>
+            <div class="col-span-2 text-center">
+                <span class="text-xs uppercase tracking-widest text-primary/80">{{ p.categoria.nombre if p.categoria else 'Sin categoría' }}</span>
+            </div>
+            <div class="col-span-1 text-center">
+                <span class="px-3 py-1 text-[9px] uppercase tracking-[0.2em] font-bold {% if p.stock > 0 %}text-secondary bg-secondary-container/30{% else %}text-error bg-error-container/20{% endif %}">
+                    {% if p.stock > 0 %}Stock: {{ p.stock }}{% else %}Agotado{% endif %}
+                </span>
+            </div>
+            <div class="col-span-1 text-right">
+                <span class="font-manrope text-sm font-semibold text-secondary">${{ "{:,.0f}".format(p.precio|float).replace(',', '.') }}</span>
+            </div>
+            <div class="col-span-3 text-right flex justify-end gap-4">
+                <button class="text-outline-variant hover:text-primary transition-colors" onclick="editarProducto({{ p.id }})">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+                <form action="{{ url_for('main.admin_eliminar_producto', id=p.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este producto?')">
+                    <button type="submit" class="text-outline-variant hover:text-error transition-colors">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Formulario para agregar producto -->
+    <div class="mt-12 bg-surface-container-low p-8">
+        <h3 class="font-headline text-xl mb-6">Agregar Nuevo Producto</h3>
+        <form action="{{ url_for('main.admin_crear_producto') }}" method="POST" class="grid grid-cols-2 gap-6">
+            <div>
+                <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre</label>
+                <input type="text" name="nombre" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] uppercase tracking-widest mb-2">SKU</label>
+                <input type="text" name="sku" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] uppercase tracking-widest mb-2">Precio</label>
+                <input type="number" name="precio" step="0.01" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] uppercase tracking-widest mb-2">Stock</label>
+                <input type="number" name="stock" value="0" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] uppercase tracking-widest mb-2">Categoría</label>
+                <select name="categoria_id" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                    <option value="">Seleccionar...</option>
+                    {% for c in categorias %}
+                    <option value="{{ c.id }}">{{ c.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] uppercase tracking-widest mb-2">URL Imagen</label>
+                <input type="text" name="imagen_url" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+            </div>
+            <div class="col-span-2">
+                <label class="block text-[10px] uppercase tracking-widest mb-2">Descripción</label>
+                <textarea name="descripcion" rows="3" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm"></textarea>
+            </div>
+            <div class="col-span-2">
+                <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                    Agregar Producto
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+function editarProducto(id) {
+    alert('Función de edición en desarrollo. ID: ' + id);
+}
+</script>
+</body>
+</html>

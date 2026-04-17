@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tu Carrito - ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400;700&amp;family=Manrope:wght@200;300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "secondary-container": "#ffddb6",
+                    "tertiary-container": "#feeee1",
+                    "on-tertiary-fixed-variant": "#6e6258",
+                    "surface-container-high": "#e6e9e4",
+                    "outline-variant": "#afb3ae",
+                    "tertiary": "#685d53",
+                    "primary": "#5f5e5e",
+                    "on-primary-fixed-variant": "#5c5b5b",
+                    "on-secondary-fixed-variant": "#705738",
+                    "on-secondary-container": "#654d2f",
+                    "on-error-container": "#742410",
+                    "surface-container-highest": "#e0e4de",
+                    "on-primary-container": "#525151",
+                    "on-tertiary-fixed": "#50463d",
+                    "on-tertiary": "#fff7f3",
+                    "background": "#faf9f6",
+                    "primary-fixed-dim": "#d6d4d3",
+                    "inverse-primary": "#ffffff",
+                    "secondary-dim": "#674f30",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-dim": "#d6dbd5",
+                    "tertiary-dim": "#5c5148",
+                    "error": "#9e422c",
+                    "on-tertiary-container": "#63584f",
+                    "primary-dim": "#535252",
+                    "surface-bright": "#faf9f6",
+                    "on-secondary": "#fff7f3",
+                    "error-container": "#fe8b70",
+                    "surface-variant": "#e0e4de",
+                    "surface": "#faf9f6",
+                    "error-dim": "#5c1202",
+                    "on-background": "#2f3430",
+                    "secondary-fixed": "#ffddb6",
+                    "tertiary-fixed": "#feeee1",
+                    "inverse-on-surface": "#9d9d9a",
+                    "secondary-fixed-dim": "#f1cfa8",
+                    "outline": "#777c77",
+                    "surface-tint": "#5f5e5e",
+                    "surface-container-low": "#f4f4f0",
+                    "on-secondary-fixed": "#513b1e",
+                    "primary-fixed": "#e4e2e1",
+                    "on-primary-fixed": "#3f3f3f",
+                    "surface-container": "#edeeea",
+                    "inverse-surface": "#0d0f0d",
+                    "on-error": "#fff7f6",
+                    "secondary": "#745b3b",
+                    "primary-container": "#e4e2e1",
+                    "on-surface-variant": "#5c605c",
+                    "tertiary-fixed-dim": "#f0e0d3",
+                    "on-surface": "#2f3430",
+                    "on-primary": "#faf7f6"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+                },
+                "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    body { background-color: #faf9f6; color: #2f3430; font-family: 'Manrope', sans-serif; }
+    .quantity-btn { cursor: pointer; user-select: none; }
+    .quantity-btn:hover { color: #745b3b; }
+</style>
+</head>
+<body class="bg-background text-on-surface">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#faf9f6]/90 backdrop-blur-md flex justify-between items-center px-8 py-6">
+    <div class="flex items-center gap-4">
+        <a href="{{ url_for('main.index') }}" class="hover:opacity-70 transition-opacity">
+            <span class="material-symbols-outlined text-stone-700 cursor-pointer">arrow_back</span>
+        </a>
+    </div>
+    <a href="{{ url_for('main.index') }}" class="font-noto-serif tracking-[0.3em] uppercase text-2xl font-light text-stone-800">ATELIER</a>
+    <div class="flex items-center gap-6">
+        <a href="{{ url_for('main.carrito') }}" class="relative">
+            <span class="material-symbols-outlined text-stone-700 cursor-pointer">shopping_bag</span>
+            {% if items|length > 0 %}
+            <span class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full">{{ items|length }}</span>
+            {% endif %}
+        </a>
+    </div>
+</header>
+
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto min-h-screen">
+    <div class="mb-12">
+        <h1 class="font-headline text-4xl tracking-tight text-on-surface">Tu Carrito</h1>
+        <p class="font-label text-sm uppercase tracking-[0.2em] text-on-secondary-fixed-variant mt-2">
+            {% if items|length == 0 %}
+                No hay artículos en tu carrito
+            {% elif items|length == 1 %}
+                1 Artículo Seleccionado
+            {% else %}
+                {{ items|length }} Artículos Seleccionados
+            {% endif %}
+        </p>
+    </div>
+
+    {% if items|length > 0 %}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <!-- Product List Column -->
+        <section class="lg:col-span-8 space-y-8">
+            {% for item in items %}
+            <div class="group flex gap-6 pb-8 items-start bg-surface-container-lowest p-6 border-b border-outline-variant/10" id="cart-item-{{ item.id }}">
+                <div class="w-32 aspect-[3/4] overflow-hidden bg-surface-container">
+                    <img src="{{ item.producto.imagen_url }}" alt="{{ item.producto.nombre }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                         onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                </div>
+                <div class="flex-1 flex flex-col justify-between h-full py-1">
+                    <div class="flex justify-between">
+                        <div>
+                            <h3 class="font-headline text-lg text-on-surface">{{ item.producto.nombre }}</h3>
+                            <p class="font-label text-xs text-outline mt-1 uppercase tracking-wider">{{ item.producto.categoria.nombre if item.producto.categoria else 'Colección' }}</p>
+                        </div>
+                        <button onclick="eliminarItem({{ item.id }})" class="text-outline hover:text-error transition-colors p-2">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <div class="mt-6 flex gap-8">
+                        <div>
+                            <span class="font-label text-[10px] uppercase tracking-widest text-outline block mb-2">Talla</span>
+                            <span class="font-body text-sm text-on-surface">{{ item.talla }}</span>
+                        </div>
+                        <div>
+                            <span class="font-label text-[10px] uppercase tracking-widest text-outline block mb-2">Color</span>
+                            <div class="flex items-center gap-2">
+                                <span class="w-4 h-4 rounded-full" style="background-color: {% if item.color == 'Antracita' %}#5f5e5e{% elif item.color == 'Crudo' %}#e4e2e1{% elif item.color == 'Negro' %}#2f3430{% elif item.color == 'Marrón' %}#745b3b{% else %}#5f5e5e{% endif %};"></span>
+                                <span class="font-body text-sm text-on-surface">{{ item.color }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-label text-[10px] uppercase tracking-widest text-outline block mb-2">Cantidad</span>
+                            <div class="flex items-center gap-3">
+                                <button onclick="actualizarCantidad({{ item.id }}, -1)" class="quantity-btn text-outline hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-sm">remove</span>
+                                </button>
+                                <span class="font-body text-sm w-6 text-center" id="cantidad-{{ item.id }}">{{ item.cantidad }}</span>
+                                <button onclick="actualizarCantidad({{ item.id }}, 1)" class="quantity-btn text-outline hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-sm">add</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-auto pt-6">
+                        <span class="font-body text-lg text-secondary" id="subtotal-{{ item.id }}">${{ "{:,.0f}".format(item.subtotal).replace(',', '.') }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="pt-6">
+                <a href="{{ url_for('main.index') }}" class="flex items-center gap-2 group cursor-pointer w-fit">
+                    <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform">west</span>
+                    <span class="font-label text-sm uppercase tracking-widest border-b border-transparent group-hover:border-primary transition-all">Continuar comprando</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Order Summary Column -->
+        <aside class="lg:col-span-4 sticky top-32">
+            <div class="bg-surface-container-high p-8 lg:p-10">
+                <h2 class="font-headline text-2xl mb-10 tracking-tight">Resumen del Pedido</h2>
+                
+                <div class="space-y-6 pb-8 border-b border-outline-variant/20">
+                    <div class="flex justify-between items-center">
+                        <span class="font-label text-sm uppercase tracking-wider text-on-surface-variant">Subtotal</span>
+                        <span class="font-body text-lg" id="cart-subtotal">${{ "{:,.0f}".format(subtotal).replace(',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-label text-sm uppercase tracking-wider text-on-surface-variant">Envío</span>
+                        <span class="font-body text-sm uppercase text-secondary">Calculado en checkout</span>
+                    </div>
+                </div>
+                
+                <div class="py-8 mb-8 flex justify-between items-center">
+                    <span class="font-headline text-xl">Total Estimado</span>
+                    <span class="font-headline text-2xl text-on-surface font-bold" id="cart-total">${{ "{:,.0f}".format(total).replace(',', '.') }}</span>
+                </div>
+                
+                <button onclick="realizarPedido()" class="w-full bg-primary text-on-primary py-6 px-4 font-label uppercase tracking-[0.3em] text-sm hover:bg-primary-dim hover:-translate-y-0.5 transition-all duration-300">
+                    REALIZAR PEDIDO
+                </button>
+                
+                <div class="mt-8 space-y-4">
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-sm">verified_user</span>
+                        <span class="text-[11px] uppercase tracking-wider">Pago Seguro & Encriptado</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-sm">local_shipping</span>
+                        <span class="text-[11px] uppercase tracking-wider">Envío Express de Cortesía</span>
+                    </div>
+                </div>
+                
+                <div class="mt-10">
+                    <label class="font-label text-[10px] uppercase tracking-[0.2em] text-outline block mb-3">Código Promocional</label>
+                    <div class="flex border-b border-outline-variant/30 py-2">
+                        <input type="text" id="codigo-promocional" class="bg-transparent border-none focus:ring-0 w-full font-body text-sm tracking-widest placeholder:text-outline-variant/50 uppercase" placeholder="INGRESAR CÓDIGO">
+                        <button onclick="aplicarCodigo()" class="font-label text-[10px] uppercase tracking-widest text-primary font-semibold hover:text-secondary transition-colors">APLICAR</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    {% else %}
+    <!-- Carrito vacío -->
+    <div class="text-center py-24">
+        <span class="material-symbols-outlined text-7xl text-outline-variant mb-6">shopping_bag</span>
+        <h3 class="font-headline text-2xl text-on-surface-variant mb-4">Tu carrito está vacío</h3>
+        <p class="text-on-surface-variant/60 mb-8">Explora nuestra colección y encuentra piezas únicas para tu guardarropa.</p>
+        <a href="{{ url_for('main.index') }}" class="inline-block bg-primary text-on-primary px-10 py-4 font-label text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+            Explorar Colección
+        </a>
+    </div>
+    {% endif %}
+</main>
+
+<script>
+async function actualizarCantidad(itemId, cambio) {
+    const cantidadSpan = document.getElementById(`cantidad-${itemId}`);
+    let nuevaCantidad = parseInt(cantidadSpan.textContent) + cambio;
+    
+    if (nuevaCantidad < 1) {
+        if (confirm('¿Eliminar este artículo del carrito?')) {
+            eliminarItem(itemId);
+        }
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/carrito/actualizar/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cantidad: nuevaCantidad })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert(data.error || 'Error al actualizar cantidad');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar el carrito');
+    }
+}
+
+async function eliminarItem(itemId) {
+    if (!confirm('¿Eliminar este artículo del carrito?')) return;
+    
+    try {
+        const response = await fetch(`/api/carrito/eliminar/${itemId}`, {
+            method: 'DELETE'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert('Error al eliminar el artículo');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al eliminar el artículo');
+    }
+}
+
+function realizarPedido() {
+    alert('¡Gracias por tu compra! Esta es una tienda de demostración.');
+}
+
+function aplicarCodigo() {
+    const codigo = document.getElementById('codigo-promocional').value;
+    if (codigo) {
+        if (codigo.toUpperCase() === 'ATELIER10') {
+            alert('✅ Código ATELIER10 aplicado: 10% de descuento (Demostración)');
+        } else {
+            alert('❌ Código no válido. Prueba con: ATELIER10');
+        }
+    } else {
+        alert('Por favor ingresa un código promocional');
+    }
+}
+</script>
+</body>
+</html>

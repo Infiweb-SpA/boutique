@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{{ producto.nombre }} - ATELIER</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400;700&amp;family=Manrope:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-container-highest": "#e0e4de",
+                    "on-tertiary-fixed-variant": "#6e6258",
+                    "tertiary-fixed-dim": "#f0e0d3",
+                    "tertiary-dim": "#5c5148",
+                    "on-surface": "#2f3430",
+                    "on-secondary-container": "#654d2f",
+                    "surface": "#faf9f6",
+                    "secondary-fixed": "#ffddb6",
+                    "secondary-container": "#ffddb6",
+                    "on-background": "#2f3430",
+                    "outline": "#777c77",
+                    "inverse-surface": "#0d0f0d",
+                    "primary-fixed": "#e4e2e1",
+                    "secondary-fixed-dim": "#f1cfa8",
+                    "surface-tint": "#5f5e5e",
+                    "on-primary-container": "#525151",
+                    "on-primary-fixed-variant": "#5c5b5b",
+                    "surface-variant": "#e0e4de",
+                    "surface-container": "#edeeea",
+                    "inverse-primary": "#ffffff",
+                    "tertiary-fixed": "#feeee1",
+                    "tertiary": "#685d53",
+                    "on-secondary": "#fff7f3",
+                    "on-secondary-fixed-variant": "#705738",
+                    "primary-fixed-dim": "#d6d4d3",
+                    "error": "#9e422c",
+                    "primary": "#5f5e5e",
+                    "background": "#faf9f6",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#50463d",
+                    "surface-container-low": "#f4f4f0",
+                    "tertiary-container": "#feeee1",
+                    "secondary": "#745b3b",
+                    "secondary-dim": "#674f30",
+                    "surface-bright": "#faf9f6",
+                    "on-primary-fixed": "#3f3f3f",
+                    "on-secondary-fixed": "#513b1e",
+                    "error-dim": "#5c1202",
+                    "on-error": "#fff7f6",
+                    "on-tertiary": "#fff7f3",
+                    "outline-variant": "#afb3ae",
+                    "primary-container": "#e4e2e1",
+                    "on-error-container": "#742410",
+                    "on-surface-variant": "#5c605c",
+                    "surface-dim": "#d6dbd5",
+                    "on-primary": "#faf7f6",
+                    "surface-container-high": "#e6e9e4",
+                    "on-tertiary-container": "#63584f",
+                    "primary-dim": "#535252",
+                    "error-container": "#fe8b70",
+                    "inverse-on-surface": "#9d9d9a"
+                },
+                "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Manrope', sans-serif; }
+    h1, h2, h3 { font-family: 'Noto Serif', serif; }
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+
+<!-- Top Navigation -->
+<header class="flex justify-between items-center px-8 h-20 w-full fixed top-0 bg-[#faf9f6]/90 backdrop-blur-md z-50">
+    <div class="flex items-center space-x-8">
+        <a href="{{ url_for('main.index') }}" class="text-2xl font-light tracking-[0.4em] text-[#5f5e5e] mx-auto">ATELIER</a>
+    </div>
+    <div class="flex items-center space-x-6 text-[#5f5e5e]">
+        <a href="{{ url_for('main.carrito') }}" class="relative">
+            <span class="material-symbols-outlined cursor-pointer hover:opacity-70 transition-opacity">shopping_bag</span>
+            <span id="cart-badge" class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full {% if cart_count() == 0 %}hidden{% endif %}">
+                {{ cart_count() }}
+            </span>
+        </a>
+    </div>
+</header>
+
+<!-- Background Content (Simulated Catalog) -->
+<main class="pt-32 px-12 grid grid-cols-4 gap-12 opacity-30 grayscale blur-[2px] pointer-events-none">
+    <div class="aspect-[3/4] bg-surface-container-high overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=600">
+    </div>
+    <div class="aspect-[3/4] bg-surface-container-high overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/2908880/pexels-photo-2908880.jpeg?auto=compress&cs=tinysrgb&w=600">
+    </div>
+    <div class="aspect-[3/4] bg-surface-container-high overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/428340/pexels-photo-428340.jpeg?auto=compress&cs=tinysrgb&w=600">
+    </div>
+    <div class="aspect-[3/4] bg-surface-container-high overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/28990954/pexels-photo-28990954.jpeg?auto=compress&cs=tinysrgb&w=600">
+    </div>
+</main>
+
+<!-- Modal Backdrop - Product Detail -->
+<div class="fixed inset-0 bg-on-surface/20 backdrop-blur-sm z-[70] flex items-center justify-center p-8">
+    <div class="bg-surface-container-lowest w-full max-w-6xl flex flex-row overflow-hidden shadow-2xl shadow-on-surface/10 border-0 relative">
+        
+        <!-- Left: Thumbnail Column -->
+        <div class="w-24 bg-surface-container-low flex flex-col items-center py-10 space-y-4">
+            <div class="w-16 h-20 overflow-hidden ring-1 ring-secondary/50 ring-offset-2 bg-surface">
+                <img class="w-full h-full object-cover opacity-100" src="{{ producto.imagen_url }}" onerror="this.src='https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=600'">
+            </div>
+        </div>
+        
+        <!-- Center: Main Hero Image -->
+        <div class="flex-1 bg-surface relative group">
+            <img class="w-full h-full object-cover" src="{{ producto.imagen_url }}" onerror="this.src='https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=600'">
+            <div class="absolute top-6 left-6">
+                <span class="font-['Manrope'] tracking-[0.2em] uppercase text-[10px] text-on-surface-variant bg-surface/80 backdrop-blur px-3 py-1">Colección Permanente</span>
+            </div>
+        </div>
+        
+        <!-- Right: Product Information & Actions -->
+        <div class="w-[450px] flex flex-col p-12 justify-center max-h-screen overflow-y-auto">
+            <div class="mb-8">
+                <h1 class="text-4xl font-light tracking-tight text-on-surface mb-4">{{ producto.nombre }}</h1>
+                <p class="text-xl font-['Manrope'] text-on-secondary-fixed-variant">${{ "{:,.0f}".format(producto.precio|float).replace(',', '.') }}</p>
+            </div>
+            
+            <!-- Description -->
+            <div class="mb-8">
+                <p class="text-on-surface-variant font-['Manrope'] text-sm leading-relaxed tracking-wide">
+                    {{ producto.descripcion or 'Confeccionado con materiales de la más alta calidad y un diseño atemporal que perdura.' }}
+                </p>
+            </div>
+            
+            <!-- Color Selector -->
+            <div class="mb-8">
+                <p class="font-['Manrope'] tracking-[0.1em] uppercase text-[10px] text-on-surface-variant mb-4">
+                    Color: <span id="color-seleccionado-texto">Antracita</span>
+                </p>
+                <div class="flex space-x-3">
+                    <button class="color-btn w-6 h-6 rounded-full bg-[#5f5e5e] ring-2 ring-offset-2 ring-primary" data-color="Antracita" data-hex="#5f5e5e"></button>
+                    <button class="color-btn w-6 h-6 rounded-full bg-[#e4e2e1] hover:scale-110 transition-transform" data-color="Crudo" data-hex="#e4e2e1"></button>
+                    <button class="color-btn w-6 h-6 rounded-full bg-[#2f3430] hover:scale-110 transition-transform" data-color="Negro" data-hex="#2f3430"></button>
+                    <button class="color-btn w-6 h-6 rounded-full bg-[#745b3b] hover:scale-110 transition-transform" data-color="Marrón" data-hex="#745b3b"></button>
+                </div>
+            </div>
+            
+            <!-- Size Selector -->
+            <div class="mb-10">
+                <div class="flex justify-between items-center mb-4">
+                    <p class="font-['Manrope'] tracking-[0.1em] uppercase text-[10px] text-on-surface-variant">Talla</p>
+                    <button onclick="mostrarGuiaTallas()" class="text-[10px] uppercase tracking-widest text-secondary hover:opacity-70 transition-opacity underline underline-offset-4 cursor-pointer">Guía de tallas</button>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <button class="size-btn h-12 border border-outline-variant/30 flex items-center justify-center font-['Manrope'] text-xs hover:bg-surface-container-low transition-colors" data-talla="S">S</button>
+                    <button class="size-btn h-12 border border-primary flex items-center justify-center font-['Manrope'] text-xs bg-primary text-on-primary" data-talla="M">M</button>
+                    <button class="size-btn h-12 border border-outline-variant/30 flex items-center justify-center font-['Manrope'] text-xs hover:bg-surface-container-low transition-colors" data-talla="L">L</button>
+                    <button class="size-btn h-12 border border-outline-variant/30 flex items-center justify-center font-['Manrope'] text-xs hover:bg-surface-container-low transition-colors" data-talla="XL">XL</button>
+                </div>
+            </div>
+            
+            <!-- CTA Button -->
+            <button id="btn-agregar-carrito" 
+                    class="w-full bg-primary text-on-primary py-5 font-['Manrope'] tracking-[0.2em] uppercase text-xs hover:bg-primary-dim hover:translate-y-[-2px] transition-all duration-300 shadow-xl shadow-primary/10"
+                    onclick="agregarAlCarrito()"
+                    data-producto-id="{{ producto.id }}"
+                    {% if producto.stock == 0 %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
+                {% if producto.stock > 0 %}AÑADIR AL CARRITO{% else %}AGOTADO{% endif %}
+            </button>
+            
+            <!-- Footer Utilities - SOLO COMPARTIR -->
+            <div class="mt-10 pt-6 border-t border-outline-variant/10 flex items-center justify-end">
+                <button onclick="compartirProducto()" class="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-sm">share</span>
+                    <span>Compartir</span>
+                </button>
+            </div>
+            
+            <!-- Mensaje de estado -->
+            <div id="mensaje-carrito" class="mt-4 text-center text-sm p-3 hidden"></div>
+        </div>
+        
+        <!-- Close Button -->
+        <a href="{{ url_for('main.index') }}" class="absolute top-8 right-8 text-on-surface bg-surface-container-lowest/50 backdrop-blur-md p-2 hover:bg-surface-container-lowest transition-colors z-10">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </a>
+    </div>
+</div>
+
+<!-- Guía de Tallas Modal -->
+<div id="guia-tallas-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-8 bg-black/50">
+    <div class="bg-surface p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline text-xl">Guía de Tallas</h3>
+            <button onclick="cerrarGuiaTallas()" class="text-on-surface hover:text-primary">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-outline-variant/30">
+                    <th class="py-3 text-left">Talla</th>
+                    <th class="py-3 text-left">Pecho (cm)</th>
+                    <th class="py-3 text-left">Cintura (cm)</th>
+                    <th class="py-3 text-left">Cadera (cm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">S</td><td>86-91</td><td>71-76</td><td>86-91</td></tr>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">M</td><td>91-96</td><td>76-81</td><td>91-96</td></tr>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">L</td><td>96-101</td><td>81-86</td><td>96-101</td></tr>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">XL</td><td>101-106</td><td>86-91</td><td>101-106</td></tr>
+            </tbody>
+        </table>
+        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant mt-6">* Medidas aproximadas. Si tienes dudas, contáctanos.</p>
+    </div>
+</div>
+
+<script>
+// Variables globales
+let tallaSeleccionada = 'M';
+let colorSeleccionado = 'Antracita';
+const productoId = {{ producto.id }};
+const btnAgregar = document.getElementById('btn-agregar-carrito');
+const mensajeDiv = document.getElementById('mensaje-carrito');
+const colorTexto = document.getElementById('color-seleccionado-texto');
+
+// ============ SELECTOR DE COLOR ============
+document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.color-btn').forEach(b => {
+            b.classList.remove('ring-2', 'ring-offset-2', 'ring-primary');
+        });
+        this.classList.add('ring-2', 'ring-offset-2', 'ring-primary');
+        colorSeleccionado = this.getAttribute('data-color');
+        colorTexto.textContent = colorSeleccionado;
+    });
+});
+
+// ============ SELECTOR DE TALLA ============
+document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.size-btn').forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary', 'text-on-primary');
+            b.classList.add('border-outline-variant/30');
+        });
+        this.classList.remove('border-outline-variant/30');
+        this.classList.add('border-primary', 'bg-primary', 'text-on-primary');
+        tallaSeleccionada = this.getAttribute('data-talla');
+    });
+});
+
+// ============ GUÍA DE TALLAS ============
+function mostrarGuiaTallas() {
+    document.getElementById('guia-tallas-modal').classList.remove('hidden');
+    document.getElementById('guia-tallas-modal').classList.add('flex');
+}
+function cerrarGuiaTallas() {
+    document.getElementById('guia-tallas-modal').classList.add('hidden');
+    document.getElementById('guia-tallas-modal').classList.remove('flex');
+}
+document.getElementById('guia-tallas-modal').addEventListener('click', function(e) {
+    if (e.target === this) cerrarGuiaTallas();
+});
+
+// ============ COMPARTIR ============
+function compartirProducto() {
+    const url = window.location.href;
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ producto.nombre }} - ATELIER',
+            text: 'Mira este producto en ATELIER',
+            url: url
+        }).catch(() => {});
+    } else {
+        navigator.clipboard?.writeText(url).then(() => {
+            mostrarMensaje('📋 Enlace copiado al portapapeles', 'success');
+        }).catch(() => {
+            prompt('Comparte este enlace:', url);
+        });
+    }
+}
+
+// ============ AGREGAR AL CARRITO ============
+async function agregarAlCarrito() {
+    {% if producto.stock == 0 %}
+    mostrarMensaje('❌ Producto agotado', 'error');
+    return;
+    {% endif %}
+    
+    btnAgregar.disabled = true;
+    btnAgregar.style.opacity = '0.7';
+    btnAgregar.textContent = 'AGREGANDO...';
+    
+    try {
+        const response = await fetch('{{ url_for("main.api_agregar_carrito") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                producto_id: productoId,
+                cantidad: 1,
+                talla: tallaSeleccionada,
+                color: colorSeleccionado
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            mostrarMensaje('✅ ¡Producto agregado al carrito!', 'success');
+            btnAgregar.textContent = '¡AGREGADO!';
+            
+            const badge = document.getElementById('cart-badge');
+            if (badge) {
+                badge.textContent = data.total_items;
+                badge.classList.remove('hidden');
+            }
+            
+            setTimeout(() => {
+                btnAgregar.textContent = 'AÑADIR AL CARRITO';
+                btnAgregar.disabled = false;
+                btnAgregar.style.opacity = '1';
+            }, 2000);
+        } else {
+            mostrarMensaje('❌ ' + (data.error || 'Error al agregar'), 'error');
+            btnAgregar.textContent = 'AÑADIR AL CARRITO';
+            btnAgregar.disabled = false;
+            btnAgregar.style.opacity = '1';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarMensaje('❌ Error de conexión', 'error');
+        btnAgregar.textContent = 'AÑADIR AL CARRITO';
+        btnAgregar.disabled = false;
+        btnAgregar.style.opacity = '1';
+    }
+}
+
+// ============ MOSTRAR MENSAJES ============
+function mostrarMensaje(texto, tipo) {
+    mensajeDiv.textContent = texto;
+    mensajeDiv.classList.remove('hidden');
+    mensajeDiv.className = 'mt-4 text-center text-sm p-3 ' + 
+        (tipo === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700');
+    setTimeout(() => mensajeDiv.classList.add('hidden'), 3000);
+}
+
+// ============ ACTUALIZAR BADGE AL CARGAR ============
+document.addEventListener('DOMContentLoaded', function() {
+    const badge = document.getElementById('cart-badge');
+    const count = {{ cart_count() }};
+    if (badge && count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+    }
+});
+</script>
+
+</body>
+</html>

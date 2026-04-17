@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATELIER | Colección Permanente</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e0e4de",
+                        "on-tertiary-fixed-variant": "#6e6258",
+                        "tertiary-fixed-dim": "#f0e0d3",
+                        "tertiary-dim": "#5c5148",
+                        "on-surface": "#2f3430",
+                        "on-secondary-container": "#654d2f",
+                        "surface": "#faf9f6",
+                        "secondary-fixed": "#ffddb6",
+                        "secondary-container": "#ffddb6",
+                        "on-background": "#2f3430",
+                        "outline": "#777c77",
+                        "inverse-surface": "#0d0f0d",
+                        "primary-fixed": "#e4e2e1",
+                        "secondary-fixed-dim": "#f1cfa8",
+                        "surface-tint": "#5f5e5e",
+                        "on-primary-container": "#525151",
+                        "on-primary-fixed-variant": "#5c5b5b",
+                        "surface-variant": "#e0e4de",
+                        "surface-container": "#edeeea",
+                        "inverse-primary": "#ffffff",
+                        "tertiary-fixed": "#feeee1",
+                        "tertiary": "#685d53",
+                        "on-secondary": "#fff7f3",
+                        "on-secondary-fixed-variant": "#705738",
+                        "primary-fixed-dim": "#d6d4d3",
+                        "error": "#9e422c",
+                        "primary": "#5f5e5e",
+                        "background": "#faf9f6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#50463d",
+                        "surface-container-low": "#f4f4f0",
+                        "tertiary-container": "#feeee1",
+                        "secondary": "#745b3b",
+                        "secondary-dim": "#674f30",
+                        "surface-bright": "#faf9f6",
+                        "on-primary-fixed": "#3f3f3f",
+                        "on-secondary-fixed": "#513b1e",
+                        "error-dim": "#5c1202",
+                        "on-error": "#fff7f6",
+                        "on-tertiary": "#fff7f3",
+                        "outline-variant": "#afb3ae",
+                        "primary-container": "#e4e2e1",
+                        "on-error-container": "#742410",
+                        "on-surface-variant": "#5c605c",
+                        "surface-dim": "#d6dbd5",
+                        "on-primary": "#faf7f6",
+                        "surface-container-high": "#e6e9e4",
+                        "on-tertiary-container": "#63584f",
+                        "primary-dim": "#535252",
+                        "error-container": "#fe8b70",
+                        "inverse-on-surface": "#9d9d9a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #faf9f6;
+            color: #2f3430;
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-secondary/20">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-8 h-20 w-full fixed top-0 bg-[#faf9f6]/90 backdrop-blur-md z-50 transition-transform">
+<div class="flex items-center gap-6">
+<button aria-label="Menu" class="material-symbols-outlined text-primary scale-100 hover:translate-y-[-2px] transition-transform cursor-pointer">menu</button>
+</div>
+<h1 class="text-2xl font-light tracking-[0.4em] text-[#5f5e5e] mx-auto font-headline">ATELIER</h1>
+<div class="flex items-center gap-6">
+<div class="flex items-center space-x-8">
+<!-- Navigation links placeholder (hidden as per JSON navigation_links: []) -->
+</div>
+<button class="material-symbols-outlined text-[#5f5e5e] scale-100 hover:translate-y-[-2px] transition-transform cursor-pointer">shopping_bag</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop Fixed Left) -->
+<nav class="hidden lg:flex flex-col py-12 px-6 space-y-8 bg-[#faf9f6] h-full w-80 fixed left-0 top-0 z-[60] shadow-2xl shadow-black/5 ease-in-out duration-500">
+<div class="mb-8">
+<h2 class="text-xl font-headline tracking-widest text-[#5f5e5e]">ATELIER</h2>
+</div>
+<div class="space-y-2">
+<h3 class="font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] mb-6 opacity-60">CATEGORÍAS</h3>
+<ul class="space-y-4">
+<li>
+<a class="flex items-center gap-4 text-[#5f5e5e] pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2" href="#">
+<span class="material-symbols-outlined text-sm">straighten</span>
+                        Pantalones
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-[#745b3b] font-bold border-l-2 border-[#745b3b] pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2" href="#">
+<span class="material-symbols-outlined text-sm">checkroom</span>
+                        Poleras
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-[#5f5e5e] pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2" href="#">
+<span class="material-symbols-outlined text-sm">apparel</span>
+                        Chombas
+                    </a>
+</li>
+</ul>
+</div>
+<div class="pt-8 mt-auto border-t border-outline-variant/10">
+<p class="font-['Manrope'] tracking-[0.1em] uppercase text-[10px] text-on-surface-variant mb-4">Colección Permanente</p>
+<button class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] font-bold hover:opacity-70 transition-opacity">VER TODO</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="lg:ml-80 pt-32 pb-24 px-8 md:px-16 lg:px-24">
+<!-- Hero / Category Header -->
+<header class="mb-20 max-w-4xl">
+<span class="font-label text-xs tracking-[0.3em] uppercase text-on-secondary-fixed-variant mb-4 block">Seasonal Selection</span>
+<h2 class="text-5xl md:text-6xl font-headline font-light tracking-tight text-primary leading-tight mb-8">La Sencillez de lo <br/><span class="italic">Extraordinario</span></h2>
+<p class="font-body text-on-surface-variant max-w-xl leading-relaxed opacity-80">
+                Piezas diseñadas para perdurar. Tejidos nobles, cortes precisos y una paleta cromática inspirada en la arquitectura brutalista y la calidez del desierto.
+            </p>
+</header>
+<!-- Product Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
+<!-- Product 1 -->
+<article class="group">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
+<img alt="Pantalón de lino" class="w-full h-full object-cover grayscale-[0.2] transition-transform duration-1000 group-hover:scale-105" data-alt="Modern high-waisted linen trousers in a warm sand color, studio shot with soft minimalist lighting and sharp shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9xGgZd7zDw30jwQBcCEKrIZBSXVy3tST4VxTnthW6RA6nEreS60xtn3kxz_rNNW1K-FUV8AJ02Mqn-UfhZe3N4nar_T9FnxITFXNJybHvP4o8BEZghWuykjcS86PdJffKiRpfJe-8mfdAkOaY7bg9X1qsUL4hfGP-Vp98OSmtkDbuOI9fLlXXr0J0Lysuw8ASChQI0RqgviuJACB7tSUTv_vcgL4IZiYmA4DnHP1mny1JmIpM97BU3ayZkElA29eNm_CpAn4rkQ88"/>
+</div>
+<div class="space-y-2">
+<h3 class="font-body text-sm tracking-wider uppercase text-primary font-medium">Pantalón Sastre Lino</h3>
+<p class="font-body text-sm text-secondary tracking-widest">$185.000</p>
+</div>
+</article>
+<!-- Product 2 -->
+<article class="group lg:translate-y-12">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
+<img alt="Polera Algodón" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Model wearing a minimalist premium white cotton t-shirt, clean lines, high end editorial fashion photography, bright airy atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDobW05YPI_x8ExJ56qB0ggIHvdbDZ7SE7hn8KSIG9HbHY7L30iB3N_FgfAdleOR1geUiL_mq6u-gtcXWI7pHI6XUihnO511VqiPuilIGiLN03DG1djTKIg9l-_c1bMWhqEK_b3ZzZhLm4--hgyWpJ-3AfxIVbnpBc97RiWy4iPhUbF2TNttgvlnC0oUb9wIlDX7C2JrU8XPVDQjoTiXYvjYyoYP9JldHiXnMAzlUcXyO_6bNZNb2RsdYq2SsmbBlJWxVueS2YD-SSY"/>
+</div>
+<div class="space-y-2">
+<h3 class="font-body text-sm tracking-wider uppercase text-primary font-medium">Polera Algodón Pima</h3>
+<p class="font-body text-sm text-secondary tracking-widest">$45.000</p>
+</div>
+</article>
+<!-- Product 3 -->
+<article class="group">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
+<img alt="Chomba Lana" class="w-full h-full object-cover grayscale-[0.1] transition-transform duration-1000 group-hover:scale-105" data-alt="Close up detail of a high-quality textured beige wool sweater, soft morning natural light, architectural drape, tactile luxury material" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA76XPxLhjEdqQWW3iBxIdx-BGe6h6XEdj3HgWmEYj1BiS68S1XAYvTw1TkE9xSNyWJw66f_D7LlQ8EzsI3SNbOTywhgT71G9ZCcY8XEbJyO7PsTB5Eb5kjc1OlCkVKtEV7ng6wLLKG-rsK2SC6q3mhoCrlaNVL3PhvaTPQZdzykPRkV-7PXqoTHt-VAvPQ0Fg5lhDzDWPXmrqOZU73Lk-tcS_2dFJSp3redmQ11lXvbfIPlSqezObSghAq2gih8fpIRPVbjpTgjE-0"/>
+</div>
+<div class="space-y-2">
+<h3 class="font-body text-sm tracking-wider uppercase text-primary font-medium">Chomba Merino Texturada</h3>
+<p class="font-body text-sm text-secondary tracking-widest">$120.000</p>
+</div>
+</article>
+<!-- Product 4 -->
+<article class="group">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
+<img alt="Jeans" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Artisan denim jeans draped over a concrete bench in an art gallery setting, dramatic side lighting highlighting the raw texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqooUWvRCdTREvgNp1FPTtVGQlZG47FCpf8lwmxFiZtAkzr1ZCAPfQQwHqaYNRu0GRfJ7ZzLi-QZz_BQfc-H7fcMFBgNYwlluLAmi-uDfWGiC3h7kkPogkMpfDRhjE_0tGeXDclNH9Ux0-dfF-FAGrm2DlUWKzHiy34OKUzdps9GOBb9dt1WthSi42HLN0-BTUoMxH95tuV8hOPpZ0uOn-6h8T0BMPB2agFJ-oWeapSiMGsDwQiUIhf0ZI4kln-g0iQjjvQOd2WGu5"/>
+</div>
+<div class="space-y-2">
+<h3 class="font-body text-sm tracking-wider uppercase text-primary font-medium">Denim Selvedge Crudo</h3>
+<p class="font-body text-sm text-secondary tracking-widest">$145.000</p>
+</div>
+</article>
+<!-- Product 5 -->
+<article class="group lg:translate-y-12">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
+<img alt="Colección Seda" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Flowing silk garment in ivory hanging in a minimalist boutique, warm golden hour light reflecting off the fabric surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiJg8AqybQVsjPyJ5RkDKs4aVFgg0JMRsC97RWTCxg0pztBSpq1POYuh7WXHgTt7dKDEBgVKuG9ZaRwvnVkZsy108Swi5siORgl8d9Yfr6C5bHwSUDIEhGLqdZB-tczh_SqjtW2dvlts-4XHwaIkL2xVeLoOcni2ky0_vKaTBYrVb37j4NB_gA-MJnmJCHZBjNioQbV0RDgudbyQOMHoI_PA2YEjsszwj3wAtqKFR2ymqDC_aU5lqe7T4s5SVd2vltAYeznOk-HorP"/>
+</div>
+<div class="space-y-2">
+<h3 class="font-body text-sm tracking-wider uppercase text-primary font-medium">Camisa Seda Lavada</h3>
+<p class="font-body text-sm text-secondary tracking-widest">$160.000</p>
+</div>
+</article>
+<!-- Product 6 -->
+<article class="group">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
+<img alt="Pantalón Lana" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Charcoal grey tailored trousers made of fine wool, presented in a high-fashion editorial pose against a neutral stone background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfPxJnCDMPFCccyMRtqeIUIWfCyeG7PMXNmjj1VIlCBbSKmvnuLg7FiBctaraxh3W2k1k9QADyAQnLUucCzKC8z19yiCnVOXwoStr3dDh2VbNnYt0ZyJVM-QD_9JZr7WEhw4_ijqj-aKRqmMZATxUfEk3tZZyaoifHhljk5sCSrfKABjibeVJ_AtNxQMLjnPXBnFCm0e3MJThbqJ3HCr1VzD93v1Yfs70G5vw5a7aNoOYgJRHm6YTpwUICWCARxvojyyk1qry7Gmnz"/>
+</div>
+<div class="space-y-2">
+<h3 class="font-body text-sm tracking-wider uppercase text-primary font-medium">Sastre Lana Fría</h3>
+<p class="font-body text-sm text-secondary tracking-widest">$195.000</p>
+</div>
+</article>
+</section>
+<!-- Editorial Section -->
+<section class="mt-48 grid grid-cols-1 lg:grid-cols-12 items-center gap-16">
+<div class="lg:col-span-7 bg-surface-container h-[600px] overflow-hidden">
+<img alt="Atelier interior" class="w-full h-full object-cover mix-blend-multiply opacity-80" data-alt="Interior of a luxury boutique with architectural concrete walls, warm wood accents, and minimalist clothing racks in a spacious hall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdAGdR6V1YffwUEtHr_BtbC4zNtC1FugiUKLtA5qtwvEE-h97YHvc6xFhBKED_wo4zfwOy4csI5kP4dPqHArFH4S6Llmyy0_ljaY4l1-3ZF9CW1bcWy44X3LltJko0VMlfGanZvEwGkto6TxX32ko3xNBXtl-mdkf4OHz047dxt6zg-KKYisJdKS6wP0x990XQdOH2u-ZtW11aRptWLifNR1ipd7Y157SWSBjD8SGgMQykv2LS9UTYqiN4U1Yc3DRzXCVQNWmQhaQ-"/>
+</div>
+<div class="lg:col-span-4 lg:col-start-9 space-y-8">
+<h2 class="text-4xl font-headline font-light text-primary leading-tight">Nuestra Filosofía</h2>
+<p class="font-body text-on-surface-variant leading-loose italic">
+                    "No creemos en las tendencias fugaces, sino en la construcción de un armario que cuente una historia de calidad y respeto por los materiales."
+                </p>
+<div class="pt-6">
+<button class="px-10 py-4 bg-primary text-on-primary font-label text-xs tracking-widest uppercase hover:bg-primary-dim transition-all hover:-translate-y-1 shadow-lg shadow-primary/10">
+                        Descubre el Proceso
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="lg:ml-80 bg-surface-container-low py-20 px-8 md:px-24 border-t border-outline-variant/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<h4 class="font-headline text-lg tracking-widest text-primary mb-6">ATELIER</h4>
+<p class="text-xs font-body text-on-surface-variant leading-relaxed">
+                    © 2024 Atelier Studio.<br/>Santiago de Chile.
+                </p>
+</div>
+<div>
+<h5 class="font-label text-[10px] tracking-[0.2em] uppercase text-secondary mb-6">Explorar</h5>
+<ul class="space-y-3 font-body text-xs text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Colecciones</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Editorial</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Sustentabilidad</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label text-[10px] tracking-[0.2em] uppercase text-secondary mb-6">Asistencia</h5>
+<ul class="space-y-3 font-body text-xs text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Envíos y Retornos</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Guía de Tallas</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contacto</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label text-[10px] tracking-[0.2em] uppercase text-secondary mb-6">Suscribirse</h5>
+<div class="flex border-b border-outline-variant/30 py-2">
+<input class="bg-transparent border-none focus:ring-0 text-xs w-full font-body placeholder:text-outline-variant/50" placeholder="Email Address" type="email"/>
+<button class="material-symbols-outlined text-sm text-primary">arrow_forward</button>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

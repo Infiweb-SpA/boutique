@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" name="viewport"/>
+<title>Carrito - ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "secondary": "#745b3b",
+                    "primary": "#5f5e5e",
+                    "background": "#faf9f6",
+                    "surface": "#faf9f6",
+                    "on-surface": "#2f3430",
+                    "on-primary": "#faf7f6",
+                    "error": "#9e422c"
+                },
+                "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Manrope', sans-serif; background-color: #faf9f6; }
+    h1, h2, h3 { font-family: 'Noto Serif', serif; }
+    .bottom-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+</style>
+</head>
+<body class="bg-surface text-on-surface">
+
+<!-- TopAppBar -->
+<nav class="bg-[#faf9f6]/95 backdrop-blur-md text-stone-700 fixed top-0 w-full z-50 flex justify-between items-center px-5 py-4 border-b border-outline-variant/10">
+    <a href="{{ url_for('main.index') }}" class="hover:opacity-70 p-2 -ml-2">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+    <a href="{{ url_for('main.index') }}" class="text-lg font-light tracking-[0.2em] text-stone-800">ATELIER</a>
+    <a href="{{ url_for('main.carrito') }}" class="relative p-2 -mr-2">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+        {% if items|length > 0 %}
+        <span class="absolute top-0 right-0 bg-secondary text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full">{{ items|length }}</span>
+        {% endif %}
+    </a>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-24 min-h-screen px-5">
+    <header class="mb-8">
+        <h1 class="text-3xl font-light tracking-tight mb-1">Su Bolsa</h1>
+        <p class="text-on-surface-variant text-xs tracking-widest uppercase opacity-70">
+            {% if items|length == 0 %}Carrito vacío{% elif items|length == 1 %}1 Artículo{% else %}{{ items|length }} Artículos{% endif %}
+        </p>
+    </header>
+
+    {% if items|length > 0 %}
+    <div class="space-y-6">
+        <!-- Product List -->
+        <section class="space-y-6">
+            {% for item in items %}
+            <div class="flex gap-4 items-start pb-6 border-b border-outline-variant/10" id="cart-item-{{ item.id }}">
+                <div class="w-24 aspect-[3/4] bg-surface-container-low overflow-hidden flex-shrink-0">
+                    <img src="{{ item.producto.imagen_url }}" alt="{{ item.producto.nombre }}" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between">
+                        <h3 class="text-base font-medium truncate">{{ item.producto.nombre }}</h3>
+                        <button onclick="eliminarItem({{ item.id }})" class="text-outline hover:text-error p-1 flex-shrink-0">
+                            <span class="material-symbols-outlined text-xl">close</span>
+                        </button>
+                    </div>
+                    <p class="text-secondary text-[10px] uppercase tracking-wider mb-2">{{ item.producto.categoria.nombre if item.producto.categoria else 'Colección' }}</p>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-xs mb-3">
+                        <div>
+                            <span class="opacity-50 block text-[9px] uppercase">Talla</span>
+                            <span>{{ item.talla }}</span>
+                        </div>
+                        <div>
+                            <span class="opacity-50 block text-[9px] uppercase">Color</span>
+                            <div class="flex items-center gap-1">
+                                <span class="w-3 h-3 rounded-full" style="background-color: {% if item.color == 'Antracita' %}#5f5e5e{% elif item.color == 'Crudo' %}#e4e2e1{% elif item.color == 'Negro' %}#2f3430{% elif item.color == 'Marrón' %}#745b3b{% else %}#5f5e5e{% endif %};"></span>
+                                <span class="truncate">{{ item.color }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="opacity-50 block text-[9px] uppercase">Cantidad</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="actualizarCantidad({{ item.id }}, -1)" class="w-6 h-6 flex items-center justify-center border border-outline-variant/30 text-sm">−</button>
+                                <span class="w-5 text-center" id="cantidad-{{ item.id }}">{{ item.cantidad }}</span>
+                                <button onclick="actualizarCantidad({{ item.id }}, 1)" class="w-6 h-6 flex items-center justify-center border border-outline-variant/30 text-sm">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-base text-secondary font-medium" id="subtotal-{{ item.id }}">${{ "{:,.0f}".format(item.subtotal).replace(',', '.') }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+        <!-- Summary -->
+        <aside class="bg-surface-container-low p-6 mt-4">
+            <h2 class="text-lg font-light mb-6">Resumen de Compra</h2>
+            <div class="space-y-3 mb-6 pb-4 border-b border-outline-variant/20">
+                <div class="flex justify-between text-sm">
+                    <span class="opacity-70 uppercase">Subtotal</span>
+                    <span id="cart-subtotal">${{ "{:,.0f}".format(subtotal).replace(',', '.') }}</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="opacity-70 uppercase">Envío</span>
+                    <span class="italic text-xs">Calculado luego</span>
+                </div>
+            </div>
+            <div class="flex justify-between items-end mb-6">
+                <span class="text-xs uppercase opacity-60">Total Estimado</span>
+                <span class="text-2xl font-headline" id="cart-total">${{ "{:,.0f}".format(total).replace(',', '.') }}</span>
+            </div>
+            <button onclick="realizarPedido()" class="w-full bg-primary text-on-primary py-4 text-xs uppercase tracking-[0.2em] hover:bg-primary-dim transition-all">
+                FINALIZAR COMPRA
+            </button>
+            
+            <!-- Código promocional -->
+            <div class="mt-6">
+                <label class="text-[9px] uppercase tracking-widest opacity-60 block mb-2">Código Promocional</label>
+                <div class="flex border-b border-outline-variant/30 py-2">
+                    <input type="text" id="codigo-promocional" class="bg-transparent w-full text-sm uppercase placeholder:opacity-40" placeholder="INGRESAR CÓDIGO">
+                    <button onclick="aplicarCodigo()" class="text-xs uppercase tracking-widest text-primary font-bold">APLICAR</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+    {% else %}
+    <!-- Carrito vacío -->
+    <div class="text-center py-16">
+        <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">shopping_bag</span>
+        <h3 class="text-xl font-headline mb-2">Tu carrito está vacío</h3>
+        <p class="text-sm opacity-60 mb-8">Explora nuestra colección</p>
+        <a href="{{ url_for('main.index') }}" class="inline-block bg-primary text-on-primary px-8 py-4 text-xs uppercase tracking-widest">
+            Explorar Tienda
+        </a>
+    </div>
+    {% endif %}
+</main>
+
+<!-- Bottom Navigation -->
+<footer class="fixed bottom-0 left-0 w-full bg-[#faf9f6]/95 backdrop-blur-xl z-40 border-t border-outline-variant/10 bottom-safe">
+    <div class="flex justify-around items-center h-16 px-6">
+        <a href="{{ url_for('main.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">home</span></a>
+        <a href="{{ url_for('main.catalogomovil') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">search</span></a>
+        <a href="{{ url_for('main.carrito') }}" class="text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span></a>
+        <a href="{{ url_for('main.login') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">person</span></a>
+    </div>
+</footer>
+
+<script>
+async function actualizarCantidad(itemId, cambio) {
+    const cantidadSpan = document.getElementById(`cantidad-${itemId}`);
+    let nuevaCantidad = parseInt(cantidadSpan.textContent) + cambio;
+    
+    if (nuevaCantidad < 1) {
+        if (confirm('¿Eliminar este artículo?')) eliminarItem(itemId);
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/carrito/actualizar/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cantidad: nuevaCantidad })
+        });
+        const data = await response.json();
+        if (data.success) window.location.reload();
+        else alert(data.error || 'Error');
+    } catch (e) {
+        alert('Error al actualizar');
+    }
+}
+
+async function eliminarItem(itemId) {
+    if (!confirm('¿Eliminar artículo?')) return;
+    try {
+        const response = await fetch(`/api/carrito/eliminar/${itemId}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) window.location.reload();
+    } catch (e) {
+        alert('Error al eliminar');
+    }
+}
+
+function realizarPedido() {
+    alert('¡Gracias por tu compra! Tienda de demostración.');
+}
+
+function aplicarCodigo() {
+    const codigo = document.getElementById('codigo-promocional').value;
+    if (codigo.toUpperCase() === 'ATELIER10') {
+        alert('✅ Código ATELIER10: 10% descuento (Demo)');
+    } else {
+        alert('❌ Código no válido. Prueba: ATELIER10');
+    }
+}
+</script>
+</body>
+</html>

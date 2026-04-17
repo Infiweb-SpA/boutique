@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" name="viewport"/>
+<title>{{ producto.nombre }} - ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400;700&amp;family=Manrope:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "on-surface": "#2f3430",
+                    "background": "#faf9f6",
+                    "primary": "#5f5e5e",
+                    "secondary": "#745b3b",
+                    "surface": "#faf9f6",
+                    "on-primary": "#faf7f6",
+                    "error": "#9e422c",
+                    "surface-container": "#edeeea",
+                    "surface-container-low": "#f4f4f0",
+                    "outline-variant": "#afb3ae",
+                    "on-surface-variant": "#5c605c"
+                },
+                "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "notoSerif": ["Noto Serif"],
+                    "manrope": ["Manrope"]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Manrope', sans-serif; background-color: #faf9f6; }
+    .bottom-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+</style>
+</head>
+<body class="bg-surface text-on-surface">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-5 h-16 bg-[#faf9f6]/95 backdrop-blur-md z-50 border-b border-outline-variant/10">
+    <a href="{{ url_for('main.index') }}" class="p-2 -ml-2">
+        <span class="material-symbols-outlined text-[#5f5e5e]">arrow_back</span>
+    </a>
+    <div class="font-notoSerif font-light tracking-[0.2em] text-lg text-[#5f5e5e]">ATELIER</div>
+    <a href="{{ url_for('main.carrito') }}" class="relative p-2 -mr-2">
+        <span class="material-symbols-outlined text-[#5f5e5e]">shopping_bag</span>
+        <span id="cart-badge-mobile" class="absolute top-0 right-0 bg-secondary text-on-secondary text-[9px] w-4 h-4 flex items-center justify-center rounded-full {% if cart_count() == 0 %}hidden{% endif %}">
+            {{ cart_count() }}
+        </span>
+    </a>
+</header>
+
+<!-- Main Content -->
+<main class="pt-16 pb-20">
+    <!-- Hero Image -->
+    <div class="relative aspect-[3/4] w-full bg-surface-container-low overflow-hidden">
+        <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" 
+             class="w-full h-full object-cover"
+             onerror="this.src='https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=600'">
+        <div class="absolute top-4 left-4">
+            <span class="bg-surface/80 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-widest text-on-surface-variant">Colección</span>
+        </div>
+        <!-- Botón Compartir en la imagen -->
+        <button onclick="compartirProducto()" class="absolute top-4 right-4 bg-surface/80 backdrop-blur p-3 rounded-full">
+            <span class="material-symbols-outlined text-xl">share</span>
+        </button>
+    </div>
+
+    <!-- Product Info -->
+    <div class="px-5 py-6">
+        <h1 class="font-notoSerif text-2xl tracking-tight text-on-surface mb-1">{{ producto.nombre }}</h1>
+        <p class="font-manrope text-xl text-secondary mb-4">${{ "{:,.0f}".format(producto.precio|float).replace(',', '.') }}</p>
+        
+        <!-- Description -->
+        <p class="font-manrope text-sm text-on-surface-variant leading-relaxed mb-6">
+            {{ producto.descripcion or 'Confeccionado con materiales de la más alta calidad y un diseño atemporal que perdura.' }}
+        </p>
+
+        <!-- Color Selector -->
+        <div class="mb-6">
+            <p class="font-manrope text-[10px] uppercase tracking-widest text-on-surface-variant mb-3">
+                Color: <span id="color-seleccionado-texto">Antracita</span>
+            </p>
+            <div class="flex space-x-4">
+                <button class="color-btn w-8 h-8 rounded-full bg-[#5f5e5e] ring-2 ring-offset-2 ring-primary" data-color="Antracita"></button>
+                <button class="color-btn w-8 h-8 rounded-full bg-[#e4e2e1]" data-color="Crudo"></button>
+                <button class="color-btn w-8 h-8 rounded-full bg-[#2f3430]" data-color="Negro"></button>
+                <button class="color-btn w-8 h-8 rounded-full bg-[#745b3b]" data-color="Marrón"></button>
+            </div>
+        </div>
+
+        <!-- Size Selector -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-3">
+                <span class="font-manrope text-[10px] uppercase tracking-widest font-bold">Talla</span>
+                <button onclick="mostrarGuiaTallas()" class="font-manrope text-[10px] uppercase tracking-widest text-secondary underline underline-offset-4">Guía de tallas</button>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+                <button class="size-btn h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface" data-talla="S">S</button>
+                <button class="size-btn h-12 flex items-center justify-center border border-primary bg-primary text-on-primary" data-talla="M">M</button>
+                <button class="size-btn h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface" data-talla="L">L</button>
+                <button class="size-btn h-12 flex items-center justify-center border border-outline-variant/30 text-on-surface" data-talla="XL">XL</button>
+            </div>
+        </div>
+
+        <!-- CTA Button -->
+        <button id="btn-agregar-carrito" 
+                class="w-full bg-primary text-on-primary py-5 font-manrope font-bold text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3"
+                onclick="agregarAlCarrito()"
+                {% if producto.stock == 0 %}disabled style="opacity: 0.5;"{% endif %}>
+            <span class="material-symbols-outlined text-sm">shopping_cart</span>
+            {% if producto.stock > 0 %}AÑADIR AL CARRITO{% else %}AGOTADO{% endif %}
+        </button>
+
+        <!-- Mensaje de estado -->
+        <div id="mensaje-carrito" class="mt-4 text-center text-sm p-3 hidden"></div>
+
+        <!-- Info adicional -->
+        <div class="mt-8 pt-6 border-t border-outline-variant/10 grid grid-cols-2 gap-4">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">local_shipping</span>
+                <span class="font-manrope text-[10px] uppercase tracking-tighter text-on-surface/60">Envío Express</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">verified</span>
+                <span class="font-manrope text-[10px] uppercase tracking-tighter text-on-surface/60">Autenticidad</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Guía de Tallas Modal -->
+<div id="guia-tallas-modal" class="fixed inset-0 z-[100] hidden items-end md:items-center justify-center bg-black/50">
+    <div class="bg-surface p-6 w-full max-w-md rounded-t-2xl md:rounded-2xl">
+        <div class="w-12 h-1 bg-outline-variant/30 rounded-full mx-auto mb-4 md:hidden"></div>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-headline text-lg">Guía de Tallas</h3>
+            <button onclick="cerrarGuiaTallas()" class="text-on-surface p-2">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <table class="w-full text-xs">
+            <thead>
+                <tr class="border-b border-outline-variant/30">
+                    <th class="py-2 text-left">Talla</th>
+                    <th class="py-2 text-left">Pecho</th>
+                    <th class="py-2 text-left">Cintura</th>
+                    <th class="py-2 text-left">Cadera</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">S</td><td>86-91</td><td>71-76</td><td>86-91</td></tr>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">M</td><td>91-96</td><td>76-81</td><td>91-96</td></tr>
+                <tr class="border-b border-outline-variant/10"><td class="py-2">L</td><td>96-101</td><td>81-86</td><td>96-101</td></tr>
+                <tr><td class="py-2">XL</td><td>101-106</td><td>86-91</td><td>101-106</td></tr>
+            </tbody>
+        </table>
+        <p class="text-[9px] uppercase tracking-wider text-on-surface-variant mt-4 text-center">* Medidas en cm</p>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center h-16 px-6 bg-[#faf9f6]/95 backdrop-blur-xl z-40 border-t border-outline-variant/10 bottom-safe">
+    <a href="{{ url_for('main.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">home</span></a>
+    <a href="{{ url_for('main.catalogomovil') if 'catalogomovil' in config else url_for('main.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">search</span></a>
+    <a href="{{ url_for('main.carrito') }}" class="text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span></a>
+    <a href="{{ url_for('main.login') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">person</span></a>
+</nav>
+
+<script>
+// Variables globales
+let tallaSeleccionada = 'M';
+let colorSeleccionado = 'Antracita';
+const productoId = {{ producto.id }};
+const btnAgregar = document.getElementById('btn-agregar-carrito');
+const mensajeDiv = document.getElementById('mensaje-carrito');
+const colorTexto = document.getElementById('color-seleccionado-texto');
+
+// ============ SELECTOR DE COLOR ============
+document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.color-btn').forEach(b => {
+            b.classList.remove('ring-2', 'ring-offset-2', 'ring-primary');
+        });
+        this.classList.add('ring-2', 'ring-offset-2', 'ring-primary');
+        colorSeleccionado = this.getAttribute('data-color');
+        colorTexto.textContent = colorSeleccionado;
+    });
+});
+
+// ============ SELECTOR DE TALLA ============
+document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.size-btn').forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary', 'text-on-primary');
+            b.classList.add('border-outline-variant/30', 'text-on-surface');
+        });
+        this.classList.remove('border-outline-variant/30', 'text-on-surface');
+        this.classList.add('border-primary', 'bg-primary', 'text-on-primary');
+        tallaSeleccionada = this.getAttribute('data-talla');
+    });
+});
+
+// ============ GUÍA DE TALLAS ============
+function mostrarGuiaTallas() {
+    document.getElementById('guia-tallas-modal').classList.remove('hidden');
+    document.getElementById('guia-tallas-modal').classList.add('flex');
+}
+function cerrarGuiaTallas() {
+    document.getElementById('guia-tallas-modal').classList.add('hidden');
+    document.getElementById('guia-tallas-modal').classList.remove('flex');
+}
+document.getElementById('guia-tallas-modal').addEventListener('click', function(e) {
+    if (e.target === this) cerrarGuiaTallas();
+});
+
+// ============ COMPARTIR ============
+function compartirProducto() {
+    const url = window.location.href;
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ producto.nombre }} - ATELIER',
+            text: 'Mira este producto en ATELIER',
+            url: url
+        }).catch(() => {});
+    } else {
+        navigator.clipboard?.writeText(url).then(() => {
+            mostrarMensaje('📋 Enlace copiado', 'success');
+        }).catch(() => {
+            prompt('Comparte este enlace:', url);
+        });
+    }
+}
+
+// ============ AGREGAR AL CARRITO ============
+async function agregarAlCarrito() {
+    {% if producto.stock == 0 %}
+    mostrarMensaje('❌ Producto agotado', 'error');
+    return;
+    {% endif %}
+    
+    btnAgregar.disabled = true;
+    btnAgregar.style.opacity = '0.7';
+    const originalText = btnAgregar.innerHTML;
+    btnAgregar.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> AGREGANDO...';
+    
+    try {
+        const response = await fetch('{{ url_for("main.api_agregar_carrito") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                producto_id: productoId,
+                cantidad: 1,
+                talla: tallaSeleccionada,
+                color: colorSeleccionado
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            mostrarMensaje('✅ ¡Producto agregado!', 'success');
+            btnAgregar.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> ¡AGREGADO!';
+            
+            // Actualizar badges
+            ['cart-badge-mobile'].forEach(id => {
+                const badge = document.getElementById(id);
+                if (badge) {
+                    badge.textContent = data.total_items;
+                    badge.classList.remove('hidden');
+                }
+            });
+            
+            setTimeout(() => {
+                btnAgregar.innerHTML = originalText;
+                btnAgregar.disabled = false;
+                btnAgregar.style.opacity = '1';
+            }, 2000);
+        } else {
+            mostrarMensaje('❌ ' + (data.error || 'Error'), 'error');
+            btnAgregar.innerHTML = originalText;
+            btnAgregar.disabled = false;
+            btnAgregar.style.opacity = '1';
+        }
+    } catch (error) {
+        mostrarMensaje('❌ Error de conexión', 'error');
+        btnAgregar.innerHTML = originalText;
+        btnAgregar.disabled = false;
+        btnAgregar.style.opacity = '1';
+    }
+}
+
+// ============ MOSTRAR MENSAJES ============
+function mostrarMensaje(texto, tipo) {
+    mensajeDiv.textContent = texto;
+    mensajeDiv.classList.remove('hidden');
+    mensajeDiv.className = 'mt-4 text-center text-sm p-3 rounded ' + 
+        (tipo === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700');
+    setTimeout(() => mensajeDiv.classList.add('hidden'), 3000);
+}
+
+// ============ ACTUALIZAR BADGE ============
+document.addEventListener('DOMContentLoaded', function() {
+    const badge = document.getElementById('cart-badge-mobile');
+    const count = {{ cart_count() }};
+    if (badge && count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+    }
+});
+</script>
+</body>
+</html>
