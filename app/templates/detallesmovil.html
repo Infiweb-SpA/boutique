@@ -47,11 +47,11 @@
 
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full flex justify-between items-center px-5 h-16 bg-[#faf9f6]/95 backdrop-blur-md z-50 border-b border-outline-variant/10">
-    <a href="{{ url_for('main.index') }}" class="p-2 -ml-2">
+    <a href="{{ url_for('public.index') }}" class="p-2 -ml-2">
         <span class="material-symbols-outlined text-[#5f5e5e]">arrow_back</span>
     </a>
     <div class="font-notoSerif font-light tracking-[0.2em] text-lg text-[#5f5e5e]">ATELIER</div>
-    <a href="{{ url_for('main.carrito') }}" class="relative p-2 -mr-2">
+    <a href="{{ url_for('public.carrito') }}" class="relative p-2 -mr-2">
         <span class="material-symbols-outlined text-[#5f5e5e]">shopping_bag</span>
         <span id="cart-badge-mobile" class="absolute top-0 right-0 bg-secondary text-on-secondary text-[9px] w-4 h-4 flex items-center justify-center rounded-full {% if cart_count() == 0 %}hidden{% endif %}">
             {{ cart_count() }}
@@ -170,10 +170,10 @@
 
 <!-- Bottom Navigation -->
 <nav class="fixed bottom-0 w-full flex justify-around items-center h-16 px-6 bg-[#faf9f6]/95 backdrop-blur-xl z-40 border-t border-outline-variant/10 bottom-safe">
-    <a href="{{ url_for('main.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">home</span></a>
-    <a href="{{ url_for('main.catalogomovil') if 'catalogomovil' in config else url_for('main.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">search</span></a>
-    <a href="{{ url_for('main.carrito') }}" class="text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span></a>
-    <a href="{{ url_for('main.login') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">person</span></a>
+    <a href="{{ url_for('public.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">home</span></a>
+    <a href="{{ url_for('public.catalogomovil') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">search</span></a>
+    <a href="{{ url_for('public.carrito') }}" class="text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span></a>
+    <a href="{{ url_for('auth.login') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">person</span></a>
 </nav>
 
 <script>
@@ -254,7 +254,7 @@ async function agregarAlCarrito() {
     btnAgregar.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> AGREGANDO...';
     
     try {
-        const response = await fetch('{{ url_for("main.api_agregar_carrito") }}', {
+        const response = await fetch('{{ url_for("public.api_agregar_carrito") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

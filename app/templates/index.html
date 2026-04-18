@@ -94,12 +94,12 @@
         </div>
         <h1 class="text-2xl font-light tracking-[0.4em] text-[#5f5e5e] mx-auto font-headline">ATELIER</h1>
         <div class="flex items-center gap-6">
-            <a href="{{ url_for('main.carrito') }}" class="relative">
-    <span class="material-symbols-outlined text-[#5f5e5e] scale-100 hover:translate-y-[-2px] transition-transform cursor-pointer">shopping_bag</span>
-    <span id="cartBadge" class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full {% if cart_count() == 0 %}hidden{% endif %}">
-        {{ cart_count() }}
-    </span>
-</a>
+            <a href="{{ url_for('public.carrito') }}" class="relative">
+                <span class="material-symbols-outlined text-[#5f5e5e] scale-100 hover:translate-y-[-2px] transition-transform cursor-pointer">shopping_bag</span>
+                <span id="cartBadge" class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full {% if cart_count() == 0 %}hidden{% endif %}">
+                    {{ cart_count() }}
+                </span>
+            </a>
         </div>
     </header>
 
@@ -112,14 +112,14 @@
             <h3 class="font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] mb-6 opacity-60">CATEGORÍAS</h3>
             <ul class="space-y-4">
                 <li>
-                    <a class="flex items-center gap-4 text-[#5f5e5e] pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2 {% if not categoria_activa %}border-l-2 border-[#745b3b] text-[#745b3b] font-bold{% endif %}" href="{{ url_for('main.index') }}">
+                    <a class="flex items-center gap-4 text-[#5f5e5e] pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2 {% if not categoria_activa %}border-l-2 border-[#745b3b] text-[#745b3b] font-bold{% endif %}" href="{{ url_for('public.index') }}">
                         <span class="material-symbols-outlined text-sm">apps</span>
                         Todo
                     </a>
                 </li>
                 {% for c in categorias %}
                 <li>
-                    <a class="flex items-center gap-4 {% if categoria_activa == c.id %}text-[#745b3b] font-bold border-l-2 border-[#745b3b]{% else %}text-[#5f5e5e]{% endif %} pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2" href="{{ url_for('main.index', categoria=c.id) }}">
+                    <a class="flex items-center gap-4 {% if categoria_activa == c.id %}text-[#745b3b] font-bold border-l-2 border-[#745b3b]{% else %}text-[#5f5e5e]{% endif %} pl-4 font-['Manrope'] tracking-[0.1em] uppercase text-xs hover:bg-[#f4f4f0] transition-colors py-2" href="{{ url_for('public.index', categoria=c.id) }}">
                         <span class="material-symbols-outlined text-sm">
                             {% if c.nombre == 'Pantalones' %}straighten
                             {% elif c.nombre == 'Poleras' %}checkroom
@@ -134,25 +134,21 @@
         </div>
         <div class="pt-8 mt-auto border-t border-outline-variant/10">
             <p class="font-['Manrope'] tracking-[0.1em] uppercase text-[10px] text-on-surface-variant mb-4">Colección Permanente</p>
-            <!-- Cambiar esto: -->
-<a href="{{ url_for('main.admin') }}" class="w-full text-left...">
-
-<!-- Por esto (verifica autenticación): -->
-{% if current_user.is_authenticated and current_user.es_admin %}
-<a href="{{ url_for('main.admin') }}" class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] font-bold hover:opacity-70 transition-opacity flex items-center gap-2">
-    <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
-    Admin
-</a>
-<a href="{{ url_for('main.logout') }}" class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-error hover:opacity-70 transition-opacity flex items-center gap-2 mt-2">
-    <span class="material-symbols-outlined text-sm">logout</span>
-    Cerrar Sesión
-</a>
-{% else %}
-<a href="{{ url_for('main.login') }}" class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] font-bold hover:opacity-70 transition-opacity flex items-center gap-2">
-    <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
-    Admin
-</a>
-{% endif %}
+            {% if current_user.is_authenticated and current_user.es_admin %}
+            <a href="{{ url_for('admin.panel') }}" class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] font-bold hover:opacity-70 transition-opacity flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                Admin
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-error hover:opacity-70 transition-opacity flex items-center gap-2 mt-2">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Cerrar Sesión
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="w-full text-left font-['Manrope'] tracking-[0.1em] uppercase text-xs text-[#5f5e5e] font-bold hover:opacity-70 transition-opacity flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                Admin
+            </a>
+            {% endif %}
         </div>
     </nav>
 
@@ -171,7 +167,7 @@
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
             {% for p in productos %}
             <article class="group">
-                <a href="{{ url_for('main.producto', id=p.id) }}" class="block">
+                <a href="{{ url_for('public.producto', id=p.id) }}" class="block">
                     <div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-8">
                         <img src="{{ p.imagen_url }}" alt="{{ p.nombre }}" 
                              class="w-full h-full object-cover grayscale-[0.2] transition-transform duration-1000 group-hover:scale-105"

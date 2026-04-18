@@ -40,11 +40,11 @@
 
 <!-- TopAppBar -->
 <nav class="bg-[#faf9f6]/95 backdrop-blur-md text-stone-700 fixed top-0 w-full z-50 flex justify-between items-center px-5 py-4 border-b border-outline-variant/10">
-    <a href="{{ url_for('main.index') }}" class="hover:opacity-70 p-2 -ml-2">
+    <a href="{{ url_for('public.index') }}" class="hover:opacity-70 p-2 -ml-2">
         <span class="material-symbols-outlined">arrow_back</span>
     </a>
-    <a href="{{ url_for('main.index') }}" class="text-lg font-light tracking-[0.2em] text-stone-800">ATELIER</a>
-    <a href="{{ url_for('main.carrito') }}" class="relative p-2 -mr-2">
+    <a href="{{ url_for('public.index') }}" class="text-lg font-light tracking-[0.2em] text-stone-800">ATELIER</a>
+    <a href="{{ url_for('public.carrito') }}" class="relative p-2 -mr-2">
         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
         {% if items|length > 0 %}
         <span class="absolute top-0 right-0 bg-secondary text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full">{{ items|length }}</span>
@@ -146,7 +146,7 @@
         <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">shopping_bag</span>
         <h3 class="text-xl font-headline mb-2">Tu carrito está vacío</h3>
         <p class="text-sm opacity-60 mb-8">Explora nuestra colección</p>
-        <a href="{{ url_for('main.index') }}" class="inline-block bg-primary text-on-primary px-8 py-4 text-xs uppercase tracking-widest">
+        <a href="{{ url_for('public.index') }}" class="inline-block bg-primary text-on-primary px-8 py-4 text-xs uppercase tracking-widest">
             Explorar Tienda
         </a>
     </div>
@@ -156,10 +156,10 @@
 <!-- Bottom Navigation -->
 <footer class="fixed bottom-0 left-0 w-full bg-[#faf9f6]/95 backdrop-blur-xl z-40 border-t border-outline-variant/10 bottom-safe">
     <div class="flex justify-around items-center h-16 px-6">
-        <a href="{{ url_for('main.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">home</span></a>
-        <a href="{{ url_for('main.catalogomovil') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">search</span></a>
-        <a href="{{ url_for('main.carrito') }}" class="text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span></a>
-        <a href="{{ url_for('main.login') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">person</span></a>
+        <a href="{{ url_for('public.index') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">home</span></a>
+        <a href="{{ url_for('public.catalogomovil') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">search</span></a>
+        <a href="{{ url_for('public.carrito') }}" class="text-secondary"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span></a>
+        <a href="{{ url_for('auth.login') }}" class="text-[#5f5e5e]"><span class="material-symbols-outlined">person</span></a>
     </div>
 </footer>
 

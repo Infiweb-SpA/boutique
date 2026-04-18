@@ -43,7 +43,7 @@
                 {% endif %}
             {% endwith %}
             
-            <form method="POST" action="{{ url_for('main.login') }}" class="space-y-6">
+            <form method="POST" action="{{ url_for('auth.login') }}" class="space-y-6">
                 <div>
                     <label for="email" class="block font-manrope text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Email</label>
                     <div class="relative">
@@ -87,7 +87,7 @@
             </form>
             
             <div class="mt-8 pt-6 border-t border-outline-variant/10 text-center">
-                <a href="{{ url_for('main.index') }}" class="font-manrope text-xs text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-2">
+                <a href="{{ url_for('public.index') }}" class="font-manrope text-xs text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-sm">arrow_back</span>
                     Volver a la Tienda
                 </a>

@@ -94,13 +94,13 @@
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-[#faf9f6]/90 backdrop-blur-md flex justify-between items-center px-8 py-6">
     <div class="flex items-center gap-4">
-        <a href="{{ url_for('main.index') }}" class="hover:opacity-70 transition-opacity">
+        <a href="{{ url_for('public.index') }}" class="hover:opacity-70 transition-opacity">
             <span class="material-symbols-outlined text-stone-700 cursor-pointer">arrow_back</span>
         </a>
     </div>
-    <a href="{{ url_for('main.index') }}" class="font-noto-serif tracking-[0.3em] uppercase text-2xl font-light text-stone-800">ATELIER</a>
+    <a href="{{ url_for('public.index') }}" class="font-noto-serif tracking-[0.3em] uppercase text-2xl font-light text-stone-800">ATELIER</a>
     <div class="flex items-center gap-6">
-        <a href="{{ url_for('main.carrito') }}" class="relative">
+        <a href="{{ url_for('public.carrito') }}" class="relative">
             <span class="material-symbols-outlined text-stone-700 cursor-pointer">shopping_bag</span>
             {% if items|length > 0 %}
             <span class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full">{{ items|length }}</span>
@@ -177,7 +177,7 @@
             {% endfor %}
             
             <div class="pt-6">
-                <a href="{{ url_for('main.index') }}" class="flex items-center gap-2 group cursor-pointer w-fit">
+                <a href="{{ url_for('public.index') }}" class="flex items-center gap-2 group cursor-pointer w-fit">
                     <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform">west</span>
                     <span class="font-label text-sm uppercase tracking-widest border-b border-transparent group-hover:border-primary transition-all">Continuar comprando</span>
                 </a>
@@ -236,7 +236,7 @@
         <span class="material-symbols-outlined text-7xl text-outline-variant mb-6">shopping_bag</span>
         <h3 class="font-headline text-2xl text-on-surface-variant mb-4">Tu carrito está vacío</h3>
         <p class="text-on-surface-variant/60 mb-8">Explora nuestra colección y encuentra piezas únicas para tu guardarropa.</p>
-        <a href="{{ url_for('main.index') }}" class="inline-block bg-primary text-on-primary px-10 py-4 font-label text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+        <a href="{{ url_for('public.index') }}" class="inline-block bg-primary text-on-primary px-10 py-4 font-label text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
             Explorar Colección
         </a>
     </div>

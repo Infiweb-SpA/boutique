@@ -56,7 +56,7 @@ def check_project_structure():
 check_project_structure()
 
 from app import create_app, db
-from app.models import Categoria, Producto, CarritoItem
+from app.models.models import Categoria, Producto, CarritoItem
 
 # Crear la aplicación
 app = create_app()

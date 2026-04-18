@@ -87,10 +87,10 @@
 <!-- Top Navigation -->
 <header class="flex justify-between items-center px-8 h-20 w-full fixed top-0 bg-[#faf9f6]/90 backdrop-blur-md z-50">
     <div class="flex items-center space-x-8">
-        <a href="{{ url_for('main.index') }}" class="text-2xl font-light tracking-[0.4em] text-[#5f5e5e] mx-auto">ATELIER</a>
+        <a href="{{ url_for('public.index') }}" class="text-2xl font-light tracking-[0.4em] text-[#5f5e5e] mx-auto">ATELIER</a>
     </div>
     <div class="flex items-center space-x-6 text-[#5f5e5e]">
-        <a href="{{ url_for('main.carrito') }}" class="relative">
+        <a href="{{ url_for('public.carrito') }}" class="relative">
             <span class="material-symbols-outlined cursor-pointer hover:opacity-70 transition-opacity">shopping_bag</span>
             <span id="cart-badge" class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full {% if cart_count() == 0 %}hidden{% endif %}">
                 {{ cart_count() }}
@@ -197,7 +197,7 @@
         </div>
         
         <!-- Close Button -->
-        <a href="{{ url_for('main.index') }}" class="absolute top-8 right-8 text-on-surface bg-surface-container-lowest/50 backdrop-blur-md p-2 hover:bg-surface-container-lowest transition-colors z-10">
+        <a href="{{ url_for('public.index') }}" class="absolute top-8 right-8 text-on-surface bg-surface-container-lowest/50 backdrop-blur-md p-2 hover:bg-surface-container-lowest transition-colors z-10">
             <span class="material-symbols-outlined text-3xl">close</span>
         </a>
     </div>
@@ -309,7 +309,7 @@ async function agregarAlCarrito() {
     btnAgregar.textContent = 'AGREGANDO...';
     
     try {
-        const response = await fetch('{{ url_for("main.api_agregar_carrito") }}', {
+        const response = await fetch('{{ url_for("public.api_agregar_carrito") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

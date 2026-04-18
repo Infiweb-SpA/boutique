@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app import create_app, db
-from app.models import Categoria, Producto, CarritoItem, Usuario
+from app.models.models import Categoria, Producto, CarritoItem, Usuario
 
 IMAGENES_POR_CATEGORIA = {
     'Pantalones': [

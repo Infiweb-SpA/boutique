@@ -49,7 +49,7 @@
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
             <span class="material-symbols-outlined">dashboard</span>Dashboard
         </a>
-        <a href="{{ url_for('main.admin') }}" class="flex items-center gap-4 px-4 py-3 bg-[#faf9f6] text-[#745b3b] font-bold text-xs tracking-wider uppercase">
+        <a href="{{ url_for('admin.panel') }}" class="flex items-center gap-4 px-4 py-3 bg-[#faf9f6] text-[#745b3b] font-bold text-xs tracking-wider uppercase">
             <span class="material-symbols-outlined">inventory_2</span>Inventory
         </a>
         <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
@@ -60,7 +60,7 @@
         </a>
     </nav>
     <div class="px-6 mt-auto">
-        <a href="{{ url_for('main.index') }}" class="block w-full bg-primary text-on-primary py-4 text-center text-[10px] tracking-[0.2em] uppercase hover:bg-primary-dim transition-all">
+        <a href="{{ url_for('public.index') }}" class="block w-full bg-primary text-on-primary py-4 text-center text-[10px] tracking-[0.2em] uppercase hover:bg-primary-dim transition-all">
             ← Volver a Tienda
         </a>
     </div>
@@ -112,7 +112,7 @@
                 <button class="text-outline-variant hover:text-primary transition-colors" onclick="editarProducto({{ p.id }})">
                     <span class="material-symbols-outlined">edit</span>
                 </button>
-                <form action="{{ url_for('main.admin_eliminar_producto', id=p.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este producto?')">
+                <form action="{{ url_for('admin.eliminar_producto', id=p.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este producto?')">
                     <button type="submit" class="text-outline-variant hover:text-error transition-colors">
                         <span class="material-symbols-outlined">delete</span>
                     </button>
@@ -125,7 +125,7 @@
     <!-- Formulario para agregar producto -->
     <div class="mt-12 bg-surface-container-low p-8">
         <h3 class="font-headline text-xl mb-6">Agregar Nuevo Producto</h3>
-        <form action="{{ url_for('main.admin_crear_producto') }}" method="POST" class="grid grid-cols-2 gap-6">
+        <form action="{{ url_for('admin.crear_producto') }}" method="POST" class="grid grid-cols-2 gap-6">
             <div>
                 <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre</label>
                 <input type="text" name="nombre" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
