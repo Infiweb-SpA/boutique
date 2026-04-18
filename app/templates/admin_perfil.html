@@ -1,0 +1,190 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Mi Perfil - ATELIER{% endblock %}
+
+{% block header_title %}MI PERFIL{% endblock %}
+
+{% block header_stats %}
+<span class="text-sm text-on-surface-variant">{{ current_user.nombre }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Información del Perfil -->
+    <div class="bg-surface p-8 mb-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">person</span>
+            Información Personal
+        </h3>
+        
+        <form action="{{ url_for('admin.actualizar_perfil') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <!-- Avatar -->
+            <div class="flex items-center gap-6 mb-6">
+                <div class="w-24 h-24 rounded-full bg-primary/10 overflow-hidden">
+                    {% if current_user.avatar_url %}
+                    <img src="{{ current_user.avatar_url }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-primary">person</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Foto de Perfil</label>
+                    <input type="file" name="avatar" accept="image/*" class="text-sm">
+                    <p class="text-[10px] text-outline-variant mt-1">JPG, PNG o GIF. Máximo 2MB.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre Completo</label>
+                    <input type="text" name="nombre" value="{{ current_user.nombre }}" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Email</label>
+                    <input type="email" name="email" value="{{ current_user.email }}" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Teléfono</label>
+                    <input type="tel" name="telefono" value="{{ current_user.telefono or '' }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Dirección</label>
+                    <input type="text" name="direccion" value="{{ current_user.direccion or '' }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Biografía</label>
+                    <textarea name="bio" rows="3" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">{{ current_user.bio or '' }}</textarea>
+                </div>
+            </div>
+            
+            <div class="flex gap-4">
+                <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Cambiar Contraseña -->
+    <div class="bg-surface p-8 mb-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">lock</span>
+            Cambiar Contraseña
+        </h3>
+        
+        <form action="{{ url_for('admin.cambiar_password') }}" method="POST" class="space-y-6">
+            <div class="grid grid-cols-1 gap-6 max-w-md">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Contraseña Actual</label>
+                    <input type="password" name="password_actual" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Nueva Contraseña</label>
+                    <input type="password" name="nueva_password" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Confirmar Nueva Contraseña</label>
+                    <input type="password" name="confirmar_password" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+            </div>
+            
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Actualizar Contraseña
+            </button>
+        </form>
+    </div>
+    
+    <!-- Preferencias -->
+    <div class="bg-surface p-8 mb-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">settings</span>
+            Preferencias Personales
+        </h3>
+        
+        <form action="{{ url_for('admin.actualizar_preferencias') }}" method="POST" class="space-y-6">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Notificaciones de Stock</p>
+                        <p class="text-xs text-outline-variant">Recibir alertas cuando productos tengan stock bajo</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="notificaciones_stock" value="1" class="sr-only peer" {% if current_user.notificaciones_stock %}checked{% endif %}>
+                        <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                    </label>
+                </div>
+                
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Notificaciones de Pedidos</p>
+                        <p class="text-xs text-outline-variant">Recibir alertas de nuevos pedidos</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="notificaciones_pedidos" value="1" class="sr-only peer" {% if current_user.notificaciones_pedidos %}checked{% endif %}>
+                        <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                    </label>
+                </div>
+                
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Tema Preferido</p>
+                        <p class="text-xs text-outline-variant">Apariencia visual de la interfaz</p>
+                    </div>
+                    <select name="tema" class="w-32 bg-surface border border-outline-variant/30 p-2 text-sm">
+                        <option value="light" {% if current_user.tema_preferido == 'light' %}selected{% endif %}>Claro</option>
+                        <option value="dark" {% if current_user.tema_preferido == 'dark' %}selected{% endif %}>Oscuro</option>
+                        <option value="system" {% if current_user.tema_preferido == 'system' %}selected{% endif %}>Sistema</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center justify-between py-3">
+                    <div>
+                        <p class="font-medium">Idioma</p>
+                        <p class="text-xs text-outline-variant">Idioma de la interfaz</p>
+                    </div>
+                    <select name="idioma" class="w-32 bg-surface border border-outline-variant/30 p-2 text-sm">
+                        <option value="es" {% if current_user.idioma == 'es' %}selected{% endif %}>Español</option>
+                        <option value="en" {% if current_user.idioma == 'en' %}selected{% endif %}>English</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Guardar Preferencias
+            </button>
+        </form>
+    </div>
+    
+    <!-- Información de la Cuenta -->
+    <div class="bg-surface p-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">info</span>
+            Información de la Cuenta
+        </h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Tipo de Cuenta</span>
+                <span class="text-sm font-medium px-3 py-1 bg-secondary/10 text-secondary">Administrador</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Fecha de Registro</span>
+                <span class="text-sm font-medium">{{ current_user.fecha_registro.strftime('%d de %B, %Y') if current_user.fecha_registro else 'N/A' }}</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Última Conexión</span>
+                <span class="text-sm font-medium">{{ current_user.ultima_conexion.strftime('%d/%m/%Y %H:%M') if current_user.ultima_conexion else 'N/A' }}</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3">
+                <span class="text-sm text-outline-variant">ID de Usuario</span>
+                <span class="text-sm font-mono text-xs">{{ current_user.id }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

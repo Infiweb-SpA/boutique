@@ -1,177 +1,271 @@
-<!DOCTYPE html>
-<html class="light" lang="es">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Admin - ATELIER Inventory</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                "colors": {
-                    "error-dim": "#5c1202",
-                    "background": "#faf9f6",
-                    "surface": "#faf9f6",
-                    "primary": "#5f5e5e",
-                    "secondary": "#745b3b",
-                    "on-surface": "#2f3430",
-                    "on-primary": "#faf7f6"
-                },
-                "fontFamily": {
-                    "headline": ["Noto Serif"],
-                    "body": ["Manrope"],
-                    "label": ["Manrope"]
-                }
-            }
-        }
-    }
-</script>
-<style>
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
-    }
-    body { font-family: 'Manrope', sans-serif; }
-    h1, h2, h3 { font-family: 'Noto Serif', serif; }
-</style>
-</head>
-<body class="bg-background text-on-surface">
-<!-- Sidebar -->
-<aside class="h-screen w-64 fixed left-0 bg-[#f4f4f0] flex flex-col py-8 z-50">
-    <div class="px-8 mb-12">
-        <h1 class="font-noto-serif font-bold text-[#5f5e5e] text-lg tracking-widest">MANAGEMENT</h1>
-        <p class="font-manrope text-[10px] tracking-[0.2em] uppercase opacity-60">High-End Atelier</p>
-    </div>
-    <nav class="flex-1 px-4 space-y-2">
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
-            <span class="material-symbols-outlined">dashboard</span>Dashboard
-        </a>
-        <a href="{{ url_for('admin.panel') }}" class="flex items-center gap-4 px-4 py-3 bg-[#faf9f6] text-[#745b3b] font-bold text-xs tracking-wider uppercase">
-            <span class="material-symbols-outlined">inventory_2</span>Inventory
-        </a>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
-            <span class="material-symbols-outlined">group</span>Customers
-        </a>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 text-[#5f5e5e] text-xs tracking-wider uppercase hover:bg-[#e0e4de] transition-all">
-            <span class="material-symbols-outlined">settings</span>Settings
-        </a>
-    </nav>
-    <div class="px-6 mt-auto">
-        <a href="{{ url_for('public.index') }}" class="block w-full bg-primary text-on-primary py-4 text-center text-[10px] tracking-[0.2em] uppercase hover:bg-primary-dim transition-all">
-            ← Volver a Tienda
-        </a>
-    </div>
-</aside>
+{% extends "base_admin.html" %}
 
-<!-- Header -->
-<header class="fixed top-0 right-0 left-64 z-40 bg-[#faf9f6]/90 backdrop-blur-xl flex justify-between items-center px-12 py-6">
-    <h2 class="text-xl font-bold tracking-[0.2em] text-[#5f5e5e] font-headline uppercase">INVENTARIO</h2>
-    <div class="flex items-center gap-6">
-        <span class="text-sm text-on-surface-variant">{{ productos|length }} productos</span>
-    </div>
-</header>
+{% block title %}Inventario - ATELIER{% endblock %}
 
-<!-- Main Content -->
-<main class="ml-64 pt-28 px-12 pb-12 min-h-screen">
-    <!-- Tabla de productos -->
-    <div class="grid grid-cols-1 gap-px bg-surface-container-low">
-        <div class="bg-surface grid grid-cols-12 px-6 py-4 text-[10px] tracking-[0.2em] uppercase text-outline-variant">
-            <div class="col-span-5">Producto</div>
-            <div class="col-span-2 text-center">Categoría</div>
-            <div class="col-span-1 text-center">Stock</div>
-            <div class="col-span-1 text-right">Precio</div>
-            <div class="col-span-3 text-right">Acciones</div>
+{% block header_title %}INVENTARIO{% endblock %}
+
+{% block header_stats %}
+<span class="text-sm text-on-surface-variant">{{ pagination.total }} productos</span>
+{% endblock %}
+
+{% block content %}
+<!-- Filtros -->
+<div class="mb-8 bg-surface-container-low p-6">
+    <h3 class="font-headline text-lg mb-4">Filtros</h3>
+    <form method="GET" action="{{ url_for('admin.inventario') }}" class="grid grid-cols-4 gap-4">
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Categoría</label>
+            <select name="categoria_id" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                <option value="">Todas las categorías</option>
+                {% for c in categorias %}
+                <option value="{{ c.id }}" {% if filters.categoria_id == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+                {% endfor %}
+            </select>
         </div>
-        
-        {% for p in productos %}
-        <div class="group bg-surface hover:bg-surface-container-lowest transition-all duration-300 grid grid-cols-12 px-6 py-6 items-center">
-            <div class="col-span-5 flex items-center gap-6">
-                <div class="w-16 h-20 bg-surface-container-high overflow-hidden">
-                    <img src="{{ p.imagen_url }}" class="w-full h-full object-cover" onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
-                </div>
-                <div>
-                    <h4 class="font-headline text-base tracking-wide text-on-surface">{{ p.nombre }}</h4>
-                    <p class="text-[10px] uppercase tracking-widest text-outline-variant">SKU: {{ p.sku or 'N/A' }}</p>
-                </div>
-            </div>
-            <div class="col-span-2 text-center">
-                <span class="text-xs uppercase tracking-widest text-primary/80">{{ p.categoria.nombre if p.categoria else 'Sin categoría' }}</span>
-            </div>
-            <div class="col-span-1 text-center">
-                <span class="px-3 py-1 text-[9px] uppercase tracking-[0.2em] font-bold {% if p.stock > 0 %}text-secondary bg-secondary-container/30{% else %}text-error bg-error-container/20{% endif %}">
-                    {% if p.stock > 0 %}Stock: {{ p.stock }}{% else %}Agotado{% endif %}
-                </span>
-            </div>
-            <div class="col-span-1 text-right">
-                <span class="font-manrope text-sm font-semibold text-secondary">${{ "{:,.0f}".format(p.precio|float).replace(',', '.') }}</span>
-            </div>
-            <div class="col-span-3 text-right flex justify-end gap-4">
-                <button class="text-outline-variant hover:text-primary transition-colors" onclick="editarProducto({{ p.id }})">
-                    <span class="material-symbols-outlined">edit</span>
-                </button>
-                <form action="{{ url_for('admin.eliminar_producto', id=p.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este producto?')">
-                    <button type="submit" class="text-outline-variant hover:text-error transition-colors">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </form>
-            </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Stock</label>
+            <select name="stock" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                <option value="all" {% if filters.stock == 'all' %}selected{% endif %}>Todos</option>
+                <option value="in_stock" {% if filters.stock == 'in_stock' %}selected{% endif %}>Con stock</option>
+                <option value="out_of_stock" {% if filters.stock == 'out_of_stock' %}selected{% endif %}>Sin stock</option>
+            </select>
         </div>
-        {% endfor %}
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Precio mínimo</label>
+            <input type="number" name="precio_min" step="0.01" value="{{ filters.precio_min if filters.precio_min else '' }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm" placeholder="Min">
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Precio máximo</label>
+            <input type="number" name="precio_max" step="0.01" value="{{ filters.precio_max if filters.precio_max else '' }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm" placeholder="Max">
+        </div>
+        <div class="col-span-4 flex gap-4">
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Aplicar Filtros
+            </button>
+            <a href="{{ url_for('admin.inventario') }}" class="border border-outline-variant px-8 py-3 text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                Limpiar Filtros
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de productos -->
+<div class="grid grid-cols-1 gap-px bg-surface-container-low">
+    <div class="bg-surface grid grid-cols-12 px-6 py-4 text-[10px] tracking-[0.2em] uppercase text-outline-variant">
+        <div class="col-span-5">Producto</div>
+        <div class="col-span-2 text-center">Categoría</div>
+        <div class="col-span-1 text-center">Stock</div>
+        <div class="col-span-1 text-right">Precio</div>
+        <div class="col-span-3 text-right">Acciones</div>
     </div>
     
-    <!-- Formulario para agregar producto -->
-    <div class="mt-12 bg-surface-container-low p-8">
-        <h3 class="font-headline text-xl mb-6">Agregar Nuevo Producto</h3>
-        <form action="{{ url_for('admin.crear_producto') }}" method="POST" class="grid grid-cols-2 gap-6">
-            <div>
-                <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre</label>
-                <input type="text" name="nombre" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+    {% for p in productos %}
+    <div class="group bg-surface hover:bg-surface-container-lowest transition-all duration-300 grid grid-cols-12 px-6 py-6 items-center">
+        <div class="col-span-5 flex items-center gap-6">
+            <div class="w-16 h-20 bg-surface-container-high overflow-hidden">
+                <img src="{{ p.imagen_url }}" class="w-full h-full object-cover" onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
             </div>
             <div>
-                <label class="block text-[10px] uppercase tracking-widest mb-2">SKU</label>
-                <input type="text" name="sku" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                <h4 class="font-headline text-base tracking-wide text-on-surface">{{ p.nombre }}</h4>
+                <p class="text-[10px] uppercase tracking-widest text-outline-variant">SKU: {{ p.sku or 'N/A' }}</p>
             </div>
-            <div>
-                <label class="block text-[10px] uppercase tracking-widest mb-2">Precio</label>
-                <input type="number" name="precio" step="0.01" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
-            </div>
-            <div>
-                <label class="block text-[10px] uppercase tracking-widest mb-2">Stock</label>
-                <input type="number" name="stock" value="0" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
-            </div>
-            <div>
-                <label class="block text-[10px] uppercase tracking-widest mb-2">Categoría</label>
-                <select name="categoria_id" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
-                    <option value="">Seleccionar...</option>
-                    {% for c in categorias %}
-                    <option value="{{ c.id }}">{{ c.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label class="block text-[10px] uppercase tracking-widest mb-2">URL Imagen</label>
-                <input type="text" name="imagen_url" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
-            </div>
-            <div class="col-span-2">
-                <label class="block text-[10px] uppercase tracking-widest mb-2">Descripción</label>
-                <textarea name="descripcion" rows="3" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm"></textarea>
-            </div>
-            <div class="col-span-2">
-                <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
-                    Agregar Producto
+        </div>
+        <div class="col-span-2 text-center">
+            <span class="text-xs uppercase tracking-widest text-primary/80">{{ p.categoria.nombre if p.categoria else 'Sin categoría' }}</span>
+        </div>
+        <div class="col-span-1 text-center">
+            <span class="px-3 py-1 text-[9px] uppercase tracking-[0.2em] font-bold {% if p.stock > 0 %}text-secondary bg-secondary-container/30{% else %}text-error bg-error-container/20{% endif %}">
+                {% if p.stock > 0 %}Stock: {{ p.stock }}{% else %}Agotado{% endif %}
+            </span>
+        </div>
+        <div class="col-span-1 text-right">
+            <span class="font-manrope text-sm font-semibold text-secondary">${{ "{:,.0f}".format(p.precio|float).replace(',', '.') }}</span>
+        </div>
+        <div class="col-span-3 text-right flex justify-end gap-4">
+            <button class="text-outline-variant hover:text-primary transition-colors" onclick="abrirModalEdicion({{ p.id }})">
+                <span class="material-symbols-outlined">edit</span>
+            </button>
+            <form action="{{ url_for('admin.eliminar_producto', id=p.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este producto?')">
+                <button type="submit" class="text-outline-variant hover:text-error transition-colors">
+                    <span class="material-symbols-outlined">delete</span>
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</main>
+    {% else %}
+    <div class="bg-surface p-12 text-center">
+        <p class="text-outline-variant">No se encontraron productos con los filtros seleccionados.</p>
+    </div>
+    {% endfor %}
+</div>
 
+<!-- Paginación -->
+{% if pagination.pages > 1 %}
+<div class="mt-8 flex justify-center items-center gap-2">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.inventario', **request.args|update_page(pagination.prev_num)) }}" class="px-4 py-2 border border-outline-variant hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined">chevron_left</span>
+    </a>
+    {% endif %}
+    
+    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+            {% if page_num == pagination.page %}
+            <span class="px-4 py-2 bg-primary text-on-primary">{{ page_num }}</span>
+            {% else %}
+            <a href="{{ url_for('admin.inventario', **request.args|update_page(page_num)) }}" class="px-4 py-2 border border-outline-variant hover:bg-surface-container-high transition-all">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            <span class="px-2">...</span>
+        {% endif %}
+    {% endfor %}
+    
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.inventario', **request.args|update_page(pagination.next_num)) }}" class="px-4 py-2 border border-outline-variant hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Formulario para agregar producto -->
+<div class="mt-12 bg-surface-container-low p-8">
+    <h3 class="font-headline text-xl mb-6">Agregar Nuevo Producto</h3>
+    <form action="{{ url_for('admin.crear_producto') }}" method="POST" class="grid grid-cols-2 gap-6">
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre</label>
+            <input type="text" name="nombre" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">SKU</label>
+            <input type="text" name="sku" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Precio</label>
+            <input type="number" name="precio" step="0.01" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Stock</label>
+            <input type="number" name="stock" value="0" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Categoría</label>
+            <select name="categoria_id" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                <option value="">Seleccionar...</option>
+                {% for c in categorias %}
+                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">URL Imagen</label>
+            <input type="text" name="imagen_url" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+        </div>
+        <div class="col-span-2">
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Descripción</label>
+            <textarea name="descripcion" rows="3" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm"></textarea>
+        </div>
+        <div class="col-span-2">
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Agregar Producto
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block modals %}
+<!-- Modal de Edición -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="font-headline text-xl">Editar Producto</h3>
+            <span class="close" onclick="cerrarModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="editForm" method="POST" class="grid grid-cols-2 gap-6">
+                <input type="hidden" id="edit_product_id">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre</label>
+                    <input type="text" id="edit_nombre" name="nombre" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">SKU</label>
+                    <input type="text" id="edit_sku" name="sku" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Precio</label>
+                    <input type="number" id="edit_precio" name="precio" step="0.01" required class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Stock</label>
+                    <input type="number" id="edit_stock" name="stock" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Categoría</label>
+                    <select id="edit_categoria_id" name="categoria_id" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                        <option value="">Seleccionar...</option>
+                        {% for c in categorias %}
+                        <option value="{{ c.id }}">{{ c.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">URL Imagen</label>
+                    <input type="text" id="edit_imagen_url" name="imagen_url" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Descripción</label>
+                    <textarea id="edit_descripcion" name="descripcion" rows="3" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm"></textarea>
+                </div>
+                <div class="col-span-2 flex gap-4">
+                    <button type="submit" class="flex-1 bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                        Guardar Cambios
+                    </button>
+                    <button type="button" onclick="cerrarModal()" class="flex-1 border border-outline-variant px-8 py-3 text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
-function editarProducto(id) {
-    alert('Función de edición en desarrollo. ID: ' + id);
+const modal = document.getElementById('editModal');
+
+function abrirModalEdicion(productId) {
+    fetch(`/admin/producto/${productId}`)
+        .then(response => response.json())
+        .then(producto => {
+            document.getElementById('edit_product_id').value = producto.id;
+            document.getElementById('edit_nombre').value = producto.nombre;
+            document.getElementById('edit_sku').value = producto.sku || '';
+            document.getElementById('edit_precio').value = producto.precio;
+            document.getElementById('edit_stock').value = producto.stock;
+            document.getElementById('edit_categoria_id').value = producto.categoria_id || '';
+            document.getElementById('edit_imagen_url').value = producto.imagen_url || '';
+            document.getElementById('edit_descripcion').value = producto.descripcion || '';
+            
+            const form = document.getElementById('editForm');
+            form.action = `/admin/producto/editar/${producto.id}`;
+            
+            modal.style.display = 'block';
+        });
+}
+
+function cerrarModal() {
+    modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+    // Solo se cierra con la X
+}
+
+document.querySelector('.modal-content').onclick = function(event) {
+    event.stopPropagation();
 }
 </script>
-</body>
-</html>
+{% endblock %}

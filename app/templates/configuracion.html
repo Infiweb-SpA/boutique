@@ -1,0 +1,230 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Configuración - ATELIER{% endblock %}
+
+{% block header_title %}CONFIGURACIÓN{% endblock %}
+
+{% block header_stats %}
+<span class="text-sm text-on-surface-variant">{{ current_user.nombre }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Perfil de la Tienda -->
+    <div class="bg-surface p-8 mb-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">store</span>
+            Perfil de la Tienda
+        </h3>
+        
+        <form action="{{ url_for('admin.configuracion_tienda') }}" method="POST" class="space-y-6">
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Nombre de la Tienda</label>
+                    <input type="text" name="tienda_nombre" value="{{ configs.get('tienda_nombre', 'ATELIER') }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Email de Contacto</label>
+                    <input type="email" name="tienda_email" value="{{ configs.get('tienda_email', 'contacto@atelier.com') }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Teléfono</label>
+                    <input type="tel" name="tienda_telefono" value="{{ configs.get('tienda_telefono', '') }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Dirección</label>
+                    <input type="text" name="tienda_direccion" value="{{ configs.get('tienda_direccion', '') }}" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-[10px] uppercase tracking-widest mb-2">Descripción</label>
+                    <textarea name="tienda_descripcion" rows="3" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">{{ configs.get('tienda_descripcion', 'ATELIER - Alta costura y diseño exclusivo desde 2020.') }}</textarea>
+                </div>
+            </div>
+            
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Guardar Cambios
+            </button>
+        </form>
+    </div>
+    
+    <!-- Configuración de Inventario -->
+    <div class="bg-surface p-8 mb-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">inventory</span>
+            Configuración de Inventario
+        </h3>
+        
+        <form action="{{ url_for('admin.configuracion_inventario') }}" method="POST" class="space-y-6">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Alerta de Stock Bajo</p>
+                        <p class="text-xs text-outline-variant">Notificar cuando el stock sea menor a:</p>
+                    </div>
+                    <input type="number" name="stock_alerta" value="{{ configs.get('stock_alerta', '5') }}" min="1" class="w-24 bg-surface border border-outline-variant/30 p-2 text-sm text-center">
+                </div>
+                
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Productos por Página</p>
+                        <p class="text-xs text-outline-variant">Cantidad de productos a mostrar en catálogo</p>
+                    </div>
+                    <select name="productos_por_pagina" class="w-32 bg-surface border border-outline-variant/30 p-2 text-sm">
+                        <option value="8" {% if configs.get('productos_por_pagina', '12') == '8' %}selected{% endif %}>8</option>
+                        <option value="12" {% if configs.get('productos_por_pagina', '12') == '12' %}selected{% endif %}>12</option>
+                        <option value="16" {% if configs.get('productos_por_pagina', '12') == '16' %}selected{% endif %}>16</option>
+                        <option value="24" {% if configs.get('productos_por_pagina', '12') == '24' %}selected{% endif %}>24</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Moneda</p>
+                        <p class="text-xs text-outline-variant">Tipo de moneda del sistema</p>
+                    </div>
+                    <select name="moneda" class="w-40 bg-surface border border-outline-variant/30 p-2 text-sm">
+                        <option value="CLP" {% if configs.get('moneda', 'CLP') == 'CLP' %}selected{% endif %}>Peso Chileno (CLP)</option>
+                        <option value="USD" {% if configs.get('moneda', 'CLP') == 'USD' %}selected{% endif %}>Dólar (USD)</option>
+                        <option value="EUR" {% if configs.get('moneda', 'CLP') == 'EUR' %}selected{% endif %}>Euro (EUR)</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center justify-between py-3">
+                    <div>
+                        <p class="font-medium">Símbolo de Moneda</p>
+                        <p class="text-xs text-outline-variant">Símbolo a mostrar en los precios</p>
+                    </div>
+                    <input type="text" name="simbolo_moneda" value="{{ configs.get('simbolo_moneda', '$') }}" maxlength="3" class="w-24 bg-surface border border-outline-variant/30 p-2 text-sm text-center">
+                </div>
+            </div>
+            
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Guardar Configuración
+            </button>
+        </form>
+    </div>
+    
+    <!-- Configuración de Apariencia -->
+    <div class="bg-surface p-8 mb-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">palette</span>
+            Apariencia
+        </h3>
+        
+        <form action="{{ url_for('admin.configuracion_apariencia') }}" method="POST" class="space-y-6">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Tema por Defecto</p>
+                        <p class="text-xs text-outline-variant">Modo claro / oscuro del sistema</p>
+                    </div>
+                    <select name="tema_default" class="w-32 bg-surface border border-outline-variant/30 p-2 text-sm">
+                        <option value="light" {% if configs.get('tema_default', 'light') == 'light' %}selected{% endif %}>Claro</option>
+                        <option value="dark" {% if configs.get('tema_default', 'light') == 'dark' %}selected{% endif %}>Oscuro</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                    <div>
+                        <p class="font-medium">Tipografía Principal</p>
+                        <p class="text-xs text-outline-variant">Fuente para títulos y encabezados</p>
+                    </div>
+                    <select name="tipografia_titulos" class="w-48 bg-surface border border-outline-variant/30 p-2 text-sm">
+                        <option value="Noto Serif" {% if configs.get('tipografia_titulos', 'Noto Serif') == 'Noto Serif' %}selected{% endif %}>Noto Serif</option>
+                        <option value="Playfair Display" {% if configs.get('tipografia_titulos', 'Noto Serif') == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
+                        <option value="Cormorant Garamond" {% if configs.get('tipografia_titulos', 'Noto Serif') == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
+                        <option value="Georgia" {% if configs.get('tipografia_titulos', 'Noto Serif') == 'Georgia' %}selected{% endif %}>Georgia</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center justify-between py-3">
+                    <div>
+                        <p class="font-medium">Color Acento</p>
+                        <p class="text-xs text-outline-variant">Color principal de la interfaz</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="color" name="color_acento" value="{{ configs.get('color_acento', '#745b3b') }}" class="w-16 h-10 cursor-pointer">
+                        <span class="text-xs text-outline-variant">{{ configs.get('color_acento', '#745b3b') }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Aplicar Cambios
+            </button>
+        </form>
+    </div>
+    
+    <!-- Información del Sistema -->
+    <div class="bg-surface p-8">
+        <h3 class="font-headline text-xl mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary">info</span>
+            Información del Sistema
+        </h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Versión de ATELIER</span>
+                <span class="text-sm font-medium">2.1.0</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Entorno</span>
+                <span class="text-sm font-medium text-secondary">Producción</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Última Actualización</span>
+                <span class="text-sm font-medium">{{ configs.get('ultima_actualizacion', '15 de Marzo, 2026') }}</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Base de Datos</span>
+                <span class="text-sm font-medium">SQLite 3.35.5</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3 border-b border-outline-variant/20">
+                <span class="text-sm text-outline-variant">Zona Horaria</span>
+                <span class="text-sm font-medium">America/Santiago (UTC-4)</span>
+            </div>
+            
+            <div class="flex items-center justify-between py-3">
+                <span class="text-sm text-outline-variant">Soporte Técnico</span>
+                <span class="text-sm font-medium">{{ configs.get('tienda_email', 'soporte@atelier.com') }}</span>
+            </div>
+        </div>
+        
+        <!-- Acciones del Sistema -->
+        <div class="mt-8 pt-6 border-t border-outline-variant/20">
+            <h4 class="font-headline text-md mb-4">Acciones del Sistema</h4>
+            <div class="flex gap-4">
+                <button onclick="limpiarCache()" class="border border-outline-variant px-6 py-2 text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                    Limpiar Caché
+                </button>
+                <button onclick="exportarConfiguracion()" class="border border-outline-variant px-6 py-2 text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                    Exportar Configuración
+                </button>
+                <button onclick="verLogs()" class="border border-outline-variant px-6 py-2 text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                    Ver Logs
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function limpiarCache() {
+    if (confirm('¿Estás seguro de limpiar la caché del sistema?')) {
+        showMessage('Caché del sistema limpiada exitosamente', 'success');
+    }
+}
+
+function exportarConfiguracion() {
+    showMessage('Configuración exportada exitosamente', 'success');
+}
+
+function verLogs() {
+    window.open('/admin/logs', '_blank');
+}
+</script>
+{% endblock %}

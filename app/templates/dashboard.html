@@ -1,0 +1,133 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Dashboard - ATELIER{% endblock %}
+
+{% block header_title %}DASHBOARD{% endblock %}
+
+{% block content %}
+<!-- Tarjetas de estadísticas -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+    <div class="bg-surface p-6 border border-outline-variant/20">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-3xl text-secondary">inventory_2</span>
+            <span class="text-2xl font-bold text-primary">{{ total_productos }}</span>
+        </div>
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-outline-variant">Productos Totales</h3>
+    </div>
+    
+    <div class="bg-surface p-6 border border-outline-variant/20">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-3xl text-secondary">category</span>
+            <span class="text-2xl font-bold text-primary">{{ total_categorias }}</span>
+        </div>
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-outline-variant">Categorías</h3>
+    </div>
+    
+    <div class="bg-surface p-6 border border-outline-variant/20">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-3xl text-secondary">group</span>
+            <span class="text-2xl font-bold text-primary">{{ total_usuarios }}</span>
+        </div>
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-outline-variant">Usuarios Totales</h3>
+    </div>
+    
+    <div class="bg-surface p-6 border border-outline-variant/20">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-3xl text-error">warning</span>
+            <span class="text-2xl font-bold text-error">{{ productos_stock_bajo + productos_agotados }}</span>
+        </div>
+        <h3 class="text-[10px] uppercase tracking-[0.2em] text-outline-variant">Alertas de Stock</h3>
+    </div>
+</div>
+
+<!-- Gráficos y estadísticas detalladas -->
+<div class="grid grid-cols-2 gap-6 mb-8">
+    <!-- Productos destacados -->
+    <div class="bg-surface p-6">
+        <h3 class="font-headline text-lg mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">star</span>
+            Productos Destacados
+        </h3>
+        <div class="space-y-3">
+            {% for producto in productos_destacados %}
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-12 bg-surface-container-high overflow-hidden">
+                        <img src="{{ producto.imagen_url }}" class="w-full h-full object-cover" onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{ producto.nombre }}</p>
+                        <p class="text-[10px] uppercase tracking-widest text-outline-variant">{{ producto.categoria.nombre if producto.categoria else 'Sin categoría' }}</p>
+                    </div>
+                </div>
+                <span class="font-semibold text-secondary">${{ "{:,.0f}".format(producto.precio|float).replace(',', '.') }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Productos recientes -->
+    <div class="bg-surface p-6">
+        <h3 class="font-headline text-lg mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">schedule</span>
+            Productos Recientes
+        </h3>
+        <div class="space-y-3">
+            {% for producto in productos_recientes %}
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-12 bg-surface-container-high overflow-hidden">
+                        <img src="{{ producto.imagen_url }}" class="w-full h-full object-cover" onerror="this.src='https://images.pexels.com/photos/4210866/pexels-photo-4210866.jpeg?auto=compress&cs=tinysrgb&w=600'">
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{ producto.nombre }}</p>
+                        <p class="text-[10px] uppercase tracking-widest text-outline-variant">Stock: {{ producto.stock }}</p>
+                    </div>
+                </div>
+                <span class="text-xs px-2 py-1 {% if producto.stock > 10 %}text-secondary bg-secondary/10{% elif producto.stock > 0 %}text-yellow-600 bg-yellow-50{% else %}text-error bg-error/10{% endif %}">
+                    {% if producto.stock > 10 %}En stock{% elif producto.stock > 0 %}Stock bajo{% else %}Agotado{% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Estadísticas por categoría -->
+<div class="bg-surface p-6">
+    <h3 class="font-headline text-lg mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary">analytics</span>
+        Estadísticas por Categoría
+    </h3>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-outline-variant/30">
+                    <th class="text-left py-3 text-[10px] uppercase tracking-[0.2em] text-outline-variant">Categoría</th>
+                    <th class="text-center py-3 text-[10px] uppercase tracking-[0.2em] text-outline-variant">Productos</th>
+                    <th class="text-center py-3 text-[10px] uppercase tracking-[0.2em] text-outline-variant">Stock Total</th>
+                    <th class="text-center py-3 text-[10px] uppercase tracking-[0.2em] text-outline-variant">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categorias_stats %}
+                <tr class="border-b border-outline-variant/10 hover:bg-surface-container-lowest transition-all">
+                    <td class="py-4 text-sm">{{ cat.nombre }}</td>
+                    <td class="py-4 text-center text-sm">{{ cat.total_productos or 0 }}</td>
+                    <td class="py-4 text-center text-sm">{{ cat.total_stock or 0 }}</td>
+                    <td class="py-4 text-center">
+                        {% if cat.total_stock and cat.total_stock > 20 %}
+                        <span class="text-xs px-2 py-1 text-secondary bg-secondary/10">Saludable</span>
+                        {% elif cat.total_stock and cat.total_stock > 0 %}
+                        <span class="text-xs px-2 py-1 text-yellow-600 bg-yellow-50">Bajo</span>
+                        {% else %}
+                        <span class="text-xs px-2 py-1 text-error bg-error/10">Sin stock</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

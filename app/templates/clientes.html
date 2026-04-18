@@ -1,0 +1,141 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Clientes - ATELIER{% endblock %}
+
+{% block header_title %}CLIENTES{% endblock %}
+
+{% block header_stats %}
+<span class="text-sm text-on-surface-variant">{{ pagination.total }} clientes</span>
+{% endblock %}
+
+{% block content %}
+<!-- Estadísticas rápidas -->
+<div class="grid grid-cols-2 gap-6 mb-8">
+    <div class="bg-surface p-6 border border-outline-variant/20">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-3xl text-secondary">person</span>
+            <div>
+                <p class="text-2xl font-bold text-primary">{{ total_clientes }}</p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-outline-variant">Clientes Registrados</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-surface p-6 border border-outline-variant/20">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-3xl text-secondary">admin_panel_settings</span>
+            <div>
+                <p class="text-2xl font-bold text-primary">{{ total_admins }}</p>
+                <p class="text-[10px] uppercase tracking-[0.2em] text-outline-variant">Administradores</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="mb-8 bg-surface-container-low p-6">
+    <h3 class="font-headline text-lg mb-4">Filtros</h3>
+    <form method="GET" action="{{ url_for('admin.clientes') }}" class="grid grid-cols-3 gap-4">
+        <div class="col-span-2">
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Buscar</label>
+            <input type="text" name="search" value="{{ filters.search }}" placeholder="Nombre o email..." class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest mb-2">Tipo de Usuario</label>
+            <select name="admin" class="w-full bg-surface border border-outline-variant/30 p-3 text-sm">
+                <option value="all" {% if filters.admin == 'all' %}selected{% endif %}>Todos</option>
+                <option value="cliente" {% if filters.admin == 'cliente' %}selected{% endif %}>Clientes</option>
+                <option value="admin" {% if filters.admin == 'admin' %}selected{% endif %}>Administradores</option>
+            </select>
+        </div>
+        <div class="col-span-3 flex gap-4">
+            <button type="submit" class="bg-primary text-on-primary px-8 py-3 text-xs uppercase tracking-widest hover:bg-primary-dim transition-all">
+                Aplicar Filtros
+            </button>
+            <a href="{{ url_for('admin.clientes') }}" class="border border-outline-variant px-8 py-3 text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all">
+                Limpiar Filtros
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de clientes -->
+<div class="bg-surface">
+    <div class="grid grid-cols-12 px-6 py-4 text-[10px] tracking-[0.2em] uppercase text-outline-variant border-b border-outline-variant/30">
+        <div class="col-span-3">Usuario</div>
+        <div class="col-span-4">Email</div>
+        <div class="col-span-2 text-center">Tipo</div>
+        <div class="col-span-2 text-center">Fecha de Registro</div>
+        <div class="col-span-1 text-right">Acciones</div>
+    </div>
+    
+    {% for usuario in usuarios %}
+    <div class="grid grid-cols-12 px-6 py-4 items-center border-b border-outline-variant/10 hover:bg-surface-container-lowest transition-all">
+        <div class="col-span-3 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">person</span>
+            </div>
+            <span class="text-sm font-medium">{{ usuario.nombre }}</span>
+        </div>
+        <div class="col-span-4 text-sm text-outline-variant">{{ usuario.email }}</div>
+        <div class="col-span-2 text-center">
+            {% if usuario.es_admin %}
+            <span class="px-3 py-1 text-[9px] uppercase tracking-[0.2em] font-bold text-secondary bg-secondary/10">Administrador</span>
+            {% else %}
+            <span class="px-3 py-1 text-[9px] uppercase tracking-[0.2em] font-bold text-primary bg-primary/10">Cliente</span>
+            {% endif %}
+        </div>
+        <div class="col-span-2 text-center text-xs text-outline-variant">
+            {{ usuario.fecha_registro.strftime('%d/%m/%Y') if usuario.fecha_registro else 'N/A' }}
+        </div>
+        <div class="col-span-1 text-right">
+            <button class="text-outline-variant hover:text-primary transition-colors" onclick="verDetalles({{ usuario.id }})">
+                <span class="material-symbols-outlined">visibility</span>
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <div class="p-12 text-center">
+        <p class="text-outline-variant">No se encontraron usuarios con los filtros seleccionados.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Paginación -->
+{% if pagination.pages > 1 %}
+<div class="mt-8 flex justify-center items-center gap-2">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.clientes', **request.args|update_page(pagination.prev_num)) }}" class="px-4 py-2 border border-outline-variant hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined">chevron_left</span>
+    </a>
+    {% endif %}
+    
+    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+            {% if page_num == pagination.page %}
+            <span class="px-4 py-2 bg-primary text-on-primary">{{ page_num }}</span>
+            {% else %}
+            <a href="{{ url_for('admin.clientes', **request.args|update_page(page_num)) }}" class="px-4 py-2 border border-outline-variant hover:bg-surface-container-high transition-all">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            <span class="px-2">...</span>
+        {% endif %}
+    {% endfor %}
+    
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.clientes', **request.args|update_page(pagination.next_num)) }}" class="px-4 py-2 border border-outline-variant hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function verDetalles(id) {
+    // Implementar vista de detalles del cliente
+    console.log('Ver detalles del cliente:', id);
+}
+</script>
+{% endblock %}
